@@ -2,6 +2,7 @@ package gr.codehub.rsapi.utility;
 
 
 import gr.codehub.rsapi.model.Applicant;
+import gr.codehub.rsapi.model.ApplicantSkill;
 import gr.codehub.rsapi.model.JobOffer;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.ApplicantRepo;
@@ -22,6 +23,7 @@ import java.util.List;
 public class FileReaderToList {
     public static List<Applicant> readFromExcelApplicant(String filename, ApplicantRepo applicantRepository) throws IOException, InvalidFormatException {
         List<Applicant> applicants = new ArrayList<>() ;
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
         File workbookFile = new File(filename);
         FileInputStream file = new FileInputStream(workbookFile);
         Workbook workbook = WorkbookFactory.create(file);
@@ -32,13 +34,19 @@ public class FileReaderToList {
                 firstTime = false;
                 continue;
             }
-            applicants.add(new Applicant()
+            Applicant tempApplicant  = new Applicant();
+            applicants.add(tempApplicant
                     .setId(row.getCell(0).getRowIndex())
                     .setfName(row.getCell(0).getStringCellValue())
                     .setlName(row.getCell(1).getStringCellValue())
                     .setAddress(row.getCell(2).getStringCellValue())
                     .setRegion(row.getCell(3).getStringCellValue())
                     .setEmail(row.getCell(4).getStringCellValue()));
+
+//            applicantSkills.add(new ApplicantSkill().set_Skill(1)
+//                .set_Applicant(tempApplicant))
+//                    ;
+
             applicantRepository.saveAll(applicants);
         }
         // Closing the workbook
