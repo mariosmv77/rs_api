@@ -29,7 +29,6 @@ public class ApplicantSkill {
     }
 
     @ManyToOne
-    @JsonIgnore
     private Skill skill;
 
 

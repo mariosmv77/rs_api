@@ -24,14 +24,17 @@ import java.util.Optional;
 
 @Service
 public class JobOfferServiceImpl implements JobOfferService {
-    @Autowired
+
     private JobOfferRepo jobOfferRepo;
-
-    @Autowired
     private SkillRepo skillRepo;
+    private JobOfferSkillRepo jobOfferSkillRepo;
 
     @Autowired
-    private JobOfferSkillRepo jobOfferSkillRepo;
+    public JobOfferServiceImpl(JobOfferRepo jobOfferRepo, SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) {
+        this.jobOfferRepo = jobOfferRepo;
+        this.skillRepo = skillRepo;
+        this.jobOfferSkillRepo = jobOfferSkillRepo;
+    }
 
     @Override
     public List<JobOffer> getJobOffers() {
@@ -136,6 +139,6 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo);
+        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo,skillRepo,jobOfferSkillRepo);
     }
 }

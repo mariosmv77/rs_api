@@ -1,14 +1,8 @@
 package gr.codehub.rsapi.utility;
 
 
-import gr.codehub.rsapi.model.Applicant;
-import gr.codehub.rsapi.model.ApplicantSkill;
-import gr.codehub.rsapi.model.JobOffer;
-import gr.codehub.rsapi.model.Skill;
-import gr.codehub.rsapi.repository.ApplicantRepo;
-import gr.codehub.rsapi.repository.ApplicantSkillRepo;
-import gr.codehub.rsapi.repository.JobOfferRepo;
-import gr.codehub.rsapi.repository.SkillRepo;
+import gr.codehub.rsapi.model.*;
+import gr.codehub.rsapi.repository.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -70,7 +64,9 @@ public class FileReaderToList {
         workbook.close();
         return applicants;
     }
-    public static List<JobOffer> readFromExcelJobOffers(String filename, JobOfferRepo jobOfferRepository) throws IOException, InvalidFormatException {
+    public static List<JobOffer> readFromExcelJobOffers(
+            String filename, JobOfferRepo jobOfferRepository, SkillRepo skillRepo,
+            JobOfferSkillRepo jobOfferSkillRepo) throws IOException, InvalidFormatException {
         ArrayList<JobOffer> jobOffers = new ArrayList<>();
         File workbookFile = new File(filename);
         FileInputStream file = new FileInputStream(workbookFile);
@@ -78,21 +74,45 @@ public class FileReaderToList {
         Sheet sheet = workbook.getSheetAt(1);
         boolean firstTime = true;
         for (Row row : sheet) {
+            int cellNumbers = row.getPhysicalNumberOfCells();
             if (firstTime) {
                 firstTime = false;
                 continue;
             }
-            jobOffers.add(new JobOffer()
+            JobOffer tempJobOffer = new JobOffer();
+            jobOffers.add(tempJobOffer
                     .setCompanyCust(row.getCell(0).getStringCellValue())
                     .setTitleCust(row.getCell(1).getStringCellValue())
                     .setRegionCust(row.getCell(2).getStringCellValue())
                     .setOfferDatecust(row.getCell(3).getDateCellValue()));
+
+            tempJobOffer.setJobOfferSkills(new ArrayList<>());
+            tempJobOffer =jobOfferRepository.save(tempJobOffer);
+
+            List<Skill> skills = skillRepo.findAll();
+
+            for (int i = 5; i<cellNumbers; i++) {
+                for (Skill skill: skills) {
+                    System.out.println(row.getCell(i).getStringCellValue());
+                    System.out.println(row.getCell(4).getStringCellValue());
+                if (skill.getName().equals(row.getCell(i).getStringCellValue()) && skill.getLevels().equals(row.getCell(4).getStringCellValue())) {
+                    System.out.println("!!!!!!skill.getName()" + skill.getName() + "row.getCell(i).getStringCellValue()" + row.getCell(i).getStringCellValue());
+                    JobOfferSkill jobOfferSkill = new JobOfferSkill();
+                    jobOfferSkill.setJobOffer(tempJobOffer);
+                    jobOfferSkill.setSkill(skill);
+                    jobOfferSkillRepo.save(jobOfferSkill);
+                    tempJobOffer.getJobOfferSkills().add(jobOfferSkill);
+                    }
+                }
+            }
+
             jobOfferRepository.saveAll(jobOffers);
         }
         // Closing the workbook
         workbook.close();
         return jobOffers;
     }
+
     public static List<Skill> readFromExcelSkills(String filename, SkillRepo skillRepository) throws IOException, InvalidFormatException {
         ArrayList<Skill> skills = new ArrayList<>();
         File workbookFile = new File(filename);
