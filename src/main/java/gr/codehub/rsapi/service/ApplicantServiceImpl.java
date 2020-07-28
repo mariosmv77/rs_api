@@ -79,6 +79,9 @@ public class ApplicantServiceImpl implements ApplicantService{
     public Applicant getApplicant(long applicantId) throws ApplicantNotFoundException {
         Optional<Applicant> optionalApplicant= applicantRepo.findById(applicantId);
         if (optionalApplicant.isPresent()){
+            Applicant appl = optionalApplicant.get();
+            String a =appl.getApplicantSkills().get(1).getSkill().getName();
+            System.out.println(a);
             return optionalApplicant.get();
         }
         else throw new ApplicantNotFoundException("not such applicant exists");

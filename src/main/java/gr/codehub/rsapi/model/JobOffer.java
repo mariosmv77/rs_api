@@ -21,7 +21,7 @@ public class JobOffer {
     private String title;
     private LocalDate offerDate;
     private String region;
-    private boolean isActive;
+    private boolean isClosed;
 
     public JobOffer setCompany(String company) {
         this.company = company;
