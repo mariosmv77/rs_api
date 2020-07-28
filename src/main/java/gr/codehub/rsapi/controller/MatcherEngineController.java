@@ -40,6 +40,9 @@ public class MatcherEngineController {
     public Match addManuallyMatch(@PathVariable long jobOfferId, @PathVariable long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException, ApplicantNotFoundException {
         return matchService.addManuallyMatch(jobOfferId,applicantId);
     }
-
+    @PostMapping("partial/{id}")
+    public List<Match> partiallyMatch(@PathVariable long id) throws JobOfferNotFoundException{
+        return matchService.addPartiallyMatch(id);
+    }
 
 }
