@@ -65,6 +65,7 @@ public class CentralRepoController {
 
     @PostMapping("jobOffer")
     public JobOffer addJobOffer(@RequestBody JobOffer jobOffer) {
+
         return jobOfferService.addJobOffer(jobOffer);
     }
 

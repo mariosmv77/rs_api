@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface MatchService {
     List<Match> getMatches();
-    Match addPartiallyMatch(long jobOfferId) // edo esbisa to sketo addMatch kai ebala tis 3 periptoseis twn matches
-            throws JobOfferNotFoundException;
+    List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException;
+
     Match addManuallyMatch(long jobOfferId,long applicantId )
             throws ApplicantNotFoundException, JobOfferNotFoundException;
     Match addAutomaticMatch(long jobOfferId)

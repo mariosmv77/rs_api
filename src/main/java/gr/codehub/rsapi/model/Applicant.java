@@ -1,11 +1,13 @@
 package gr.codehub.rsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,39 +24,39 @@ public class Applicant {
     private String address;
     private String region;
     private String email;
-    private LocalDate dob;
+    private Date dob;
     private boolean isClosed;
 
-    public Applicant setId(long id) {
-        this.id = id;
-        return this;
-    }
 
-    public Applicant setfName(String fName) {
+
+    public Applicant setfnamecustom(String fName) {
         this.firstName = fName;
         return  this;
     }
 
-    public Applicant  setlName(String lName) {
+    public Applicant  setlNameCustom(String lName) {
         this.lastName = lName;
         return this;
     }
 
-    public Applicant setAddress(String address) {
+    public Applicant setAddressCust(String address) {
         this.address = address;
         return this;
     }
 
-    public Applicant setRegion(String region) {
+    public Applicant setRegionCust(String region) {
         this.region = region;
         return this;
     }
 
-    public Applicant setEmail(String email) {
+    public Applicant setEmailCust(String email) {
         this.email = email;
         return this;
     }
-
+    public Applicant setDobCust(Date dob) {
+        this.dob = dob;
+        return this;
+    }
     @OneToMany(mappedBy = "applicant")
     private List<ApplicantSkill> applicantSkills;
 

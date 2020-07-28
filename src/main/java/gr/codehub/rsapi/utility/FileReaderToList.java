@@ -2,9 +2,11 @@ package gr.codehub.rsapi.utility;
 
 
 import gr.codehub.rsapi.model.Applicant;
+import gr.codehub.rsapi.model.ApplicantSkill;
 import gr.codehub.rsapi.model.JobOffer;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.ApplicantRepo;
+import gr.codehub.rsapi.repository.ApplicantSkillRepo;
 import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.SkillRepo;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileReaderToList {
-    public static List<Applicant> readFromExcelApplicant(String filename, ApplicantRepo applicantRepository) throws IOException, InvalidFormatException {
+    public static List<Applicant> readFromExcelApplicant(String filename, ApplicantRepo applicantRepository, SkillRepo skillRepo, ApplicantSkillRepo applicantSkillRepo) throws IOException, InvalidFormatException {
         List<Applicant> applicants = new ArrayList<>() ;
         File workbookFile = new File(filename);
         FileInputStream file = new FileInputStream(workbookFile);
@@ -28,18 +30,41 @@ public class FileReaderToList {
         Sheet sheet = workbook.getSheetAt(0);
         boolean firstTime = true;
         for (Row row : sheet) {
+            int cellNumbers = row.getPhysicalNumberOfCells();
             if (firstTime) {
                 firstTime = false;
                 continue;
             }
-            applicants.add(new Applicant()
-                    .setId(row.getCell(0).getRowIndex())
-                    .setfName(row.getCell(0).getStringCellValue())
-                    .setlName(row.getCell(1).getStringCellValue())
-                    .setAddress(row.getCell(2).getStringCellValue())
-                    .setRegion(row.getCell(3).getStringCellValue())
-                    .setEmail(row.getCell(4).getStringCellValue()));
+            Applicant tempApplicant = new Applicant();
+            applicants.add(tempApplicant
+                    .setfnamecustom(row.getCell(0).getStringCellValue())
+                    .setlNameCustom(row.getCell(1).getStringCellValue())
+                    .setAddressCust(row.getCell(2).getStringCellValue())
+                    .setRegionCust(row.getCell(3).getStringCellValue())
+                    .setEmailCust(row.getCell(4).getStringCellValue())
+                    .setDobCust(row.getCell(5).getDateCellValue()));
+            tempApplicant.setApplicantSkills(new ArrayList<ApplicantSkill>());
+            tempApplicant = applicantRepository.save(tempApplicant);
+
+            List<Skill> skills = skillRepo.findAll();
+
+            for (int i = 7; i<cellNumbers; i++) {
+                   for (Skill skill: skills) {
+                       System.out.println(row.getCell(i).getStringCellValue());
+                       System.out.println(row.getCell(6).getStringCellValue());
+                   if (skill.getName().equals(row.getCell(i).getStringCellValue()) && skill.getLevels().equals(row.getCell(6).getStringCellValue())) {
+                       System.out.println("!!!!!!skill.getName()"+ skill.getName() +"row.getCell(i).getStringCellValue()" +row.getCell(i).getStringCellValue());
+                       ApplicantSkill applicantSkill = new ApplicantSkill();
+                       applicantSkill.setApplicant(tempApplicant);
+                       applicantSkill.setSkill(skill);
+                       applicantSkillRepo.save(applicantSkill);
+                       tempApplicant.getApplicantSkills().add(applicantSkill);
+                   }
+               }
+            }
+
             applicantRepository.saveAll(applicants);
+
         }
         // Closing the workbook
         workbook.close();
@@ -58,9 +83,10 @@ public class FileReaderToList {
                 continue;
             }
             jobOffers.add(new JobOffer()
-                    .setCompany(row.getCell(0).getStringCellValue())
-                    .setTitle(row.getCell(1).getStringCellValue())
-                    .setRegion(row.getCell(2).getStringCellValue()));
+                    .setCompanyCust(row.getCell(0).getStringCellValue())
+                    .setTitleCust(row.getCell(1).getStringCellValue())
+                    .setRegionCust(row.getCell(2).getStringCellValue())
+                    .setOfferDatecust(row.getCell(3).getDateCellValue()));
             jobOfferRepository.saveAll(jobOffers);
         }
         // Closing the workbook

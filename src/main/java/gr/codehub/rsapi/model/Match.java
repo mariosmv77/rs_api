@@ -1,5 +1,6 @@
 package gr.codehub.rsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,10 @@ public class Match {
     private boolean isFinalized;
 
     @ManyToOne
+    @JsonIgnore
     private Applicant applicant;
 
     @ManyToOne
+    @JsonIgnore
     private JobOffer jobOffer;
 }

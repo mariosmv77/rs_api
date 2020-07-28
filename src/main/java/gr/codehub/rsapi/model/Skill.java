@@ -1,5 +1,6 @@
 package gr.codehub.rsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,9 +38,11 @@ public class Skill {
     }
 
     @OneToMany(mappedBy = "skill")
+    @JsonIgnore
     private List<ApplicantSkill> applicantSkills;
 
     @OneToMany(mappedBy = "skill")
+    @JsonIgnore
     private List<JobOfferSkill> jobOfferSkills;
 
 }

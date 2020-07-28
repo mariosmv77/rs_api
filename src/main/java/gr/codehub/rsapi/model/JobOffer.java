@@ -1,11 +1,13 @@
 package gr.codehub.rsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -19,26 +21,32 @@ public class JobOffer {
 
     private String company;
     private String title;
-    private LocalDate offerDate;
+    private Date offerDate;
     private String region;
-    private boolean isActive;
+    private boolean isActive=true;
 
-    public JobOffer setCompany(String company) {
+    public JobOffer setCompanyCust(String company) {
         this.company = company;
         return this;
     }
 
-    public JobOffer setTitle(String title) {
+    public JobOffer setTitleCust(String title) {
         this.title = title;
         return this;
     }
 
-    public JobOffer setRegion(String region) {
+    public JobOffer setRegionCust(String region) {
         this.region = region;
         return this;
     }
 
+    public JobOffer setOfferDatecust(Date offerDate) {
+        this.offerDate = offerDate;
+        return this;
+    }
+
     @OneToMany(mappedBy = "jobOffer")
+
     private List<JobOfferSkill> jobOfferSkills ;
 
     @OneToMany(mappedBy = "jobOffer")

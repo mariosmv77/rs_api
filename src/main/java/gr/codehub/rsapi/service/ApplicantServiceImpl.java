@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class ApplicantServiceImpl implements ApplicantService{
 
-    @Autowired
+
     private ApplicantRepo applicantRepo;
     private ApplicantSkillRepo applicantSkillRepo;
     private SkillRepo skillRepo;
@@ -91,7 +91,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 
     @Override
     public List<Applicant> readApplicants() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelApplicant("data.xlsx",applicantRepo);    }
+        return FileReaderToList.readFromExcelApplicant("data.xlsx",applicantRepo, skillRepo, applicantSkillRepo);    }
 
     @Override
     public ApplicantSkill addSkillToApplicant(long applicantId, long skillId) throws ApplicantNotFoundException, SkillNotFoundException {
@@ -107,7 +107,7 @@ public class ApplicantServiceImpl implements ApplicantService{
         applicantSkill.setSkill(skill);
         applicantSkillRepo.save(applicantSkill);
         applicant.getApplicantSkills().add(applicantSkill);
-        applicantRepo.save(applicant);
+      //  applicantRepo.save(applicant);
         return applicantSkill;
     }
 }
