@@ -41,7 +41,7 @@ public class JobOfferServiceImpl implements JobOfferService{
         JobOffer jobOfferinDB = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(() -> new JobOfferNotFoundException("No exist offer with this id"));
 
-        jobOfferinDB.setActive(false);
+        jobOfferinDB.setClosed(true);
         jobOfferRepo.save(jobOfferinDB);
         return jobOfferinDB;
     }

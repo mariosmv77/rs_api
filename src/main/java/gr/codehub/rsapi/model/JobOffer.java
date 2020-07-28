@@ -1,6 +1,5 @@
 package gr.codehub.rsapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class JobOffer {
     private String title;
     private Date offerDate;
     private String region;
-    private boolean isActive=true;
+    private boolean isClosed;
 
     public JobOffer setCompanyCust(String company) {
         this.company = company;
@@ -46,7 +45,6 @@ public class JobOffer {
     }
 
     @OneToMany(mappedBy = "jobOffer")
-
     private List<JobOfferSkill> jobOfferSkills ;
 
     @OneToMany(mappedBy = "jobOffer")

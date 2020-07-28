@@ -6,6 +6,7 @@ import gr.codehub.rsapi.exception.SkillNotFoundException;
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.service.ApplicantService;
 import gr.codehub.rsapi.service.JobOfferService;
+import gr.codehub.rsapi.service.MatchService;
 import gr.codehub.rsapi.service.SkillService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,19 @@ public class CentralRepoController {
     private JobOfferService jobOfferService;
     private SkillService skillService;
 
+
     @Autowired
     public CentralRepoController(ApplicantService applicantService, JobOfferService jobOfferService,
                                  SkillService skillService) {
         this.applicantService = applicantService;
         this.jobOfferService = jobOfferService;
         this.skillService = skillService;
+
     }
 
     @GetMapping("applicant")
     public List<Applicant> getApplicants() {
+
         return applicantService.getApplicants();
     }
 
