@@ -58,9 +58,11 @@ public class Applicant {
         return this;
     }
     @OneToMany(mappedBy = "applicant")
+    @JsonIgnore
     private List<ApplicantSkill> applicantSkills;
 
     @OneToMany(mappedBy = "applicant")
+    @JsonIgnore
     private List<Match> matches;
 
 
