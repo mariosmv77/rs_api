@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.JobOfferSkillRepo;
@@ -39,7 +37,11 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer addJobOffer(JobOffer jobOffer) {
+    public JobOffer addJobOffer(JobOffer jobOffer) throws JobOfferCreationException {
+        if(jobOffer.getCompany()==null || jobOffer.getOfferDate()==null || jobOffer.getRegion()==null
+        || jobOffer.getTitle()==null)
+            throw new JobOfferCreationException("Missing fields");
+
         return jobOfferRepo.save(jobOffer);
     }
 
@@ -63,10 +65,13 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException {
+    public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         JobOffer jobOfferinDB= jobOfferRepo.findById(jobOfferIndex)
                 .orElseThrow(() -> new JobOfferNotFoundException("No exist offer with this id"));
 
+        if(jobOfferinDB.isClosed()){
+            throw new JobOfferAlreadyClosed("JobOffer is already closed");
+        }
         jobOfferinDB.setClosed(true);
         jobOfferRepo.save(jobOfferinDB);
         return jobOfferinDB;
@@ -136,6 +141,6 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo);
+        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo, skillRepo,jobOfferSkillRepo);
     }
 }

@@ -1,5 +1,7 @@
 package gr.codehub.rsapi.service;
 
+import gr.codehub.rsapi.exception.JobOfferAlreadyClosed;
+import gr.codehub.rsapi.exception.JobOfferCreationException;
 import gr.codehub.rsapi.exception.JobOfferNotFoundException;
 import gr.codehub.rsapi.exception.SkillNotFoundException;
 import gr.codehub.rsapi.model.JobOffer;
@@ -14,9 +16,9 @@ import java.util.List;
 
 public interface JobOfferService {
     List<JobOffer> getJobOffers();
-    JobOffer addJobOffer(JobOffer jobOffer);
+    JobOffer addJobOffer(JobOffer jobOffer) throws JobOfferCreationException;
     JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException;
-    JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException;
+    JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException, JobOfferAlreadyClosed;
     JobOffer getJobOffer(long jobOfferId) throws JobOfferNotFoundException;
     List<JobOffer> getSelectedJobOffers(String offerDate,
                                         String region,

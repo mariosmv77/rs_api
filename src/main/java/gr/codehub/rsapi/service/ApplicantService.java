@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -14,9 +12,9 @@ import java.util.List;
 
 public interface ApplicantService {
     List<Applicant> getApplicants();
-    Applicant addApplicant(Applicant applicant);
+    Applicant addApplicant(Applicant applicant) throws ApplicantCreationException;
     Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException;
-    Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException;
+    Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed;
     Applicant getApplicant(long applicantId) throws ApplicantNotFoundException;
     List<Applicant> getSelectedApplicants(String dob,
                                           String region,

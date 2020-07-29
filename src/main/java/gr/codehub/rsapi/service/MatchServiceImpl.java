@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.MatchNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.JobOfferRepo;
@@ -10,6 +8,7 @@ import gr.codehub.rsapi.repository.MatchRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,21 +21,26 @@ public class MatchServiceImpl implements MatchService {
     private JobOfferRepo jobOfferRepo;
     private ApplicantRepo applicantRepo;
 
+    @Autowired
     public MatchServiceImpl(MatchRepo matchRepo, JobOfferRepo jobOfferRepo, ApplicantRepo applicantRepo) {
         this.matchRepo = matchRepo;
         this.jobOfferRepo = jobOfferRepo;
         this.applicantRepo = applicantRepo;
     }
 
+
     @Override
     public List<Match> getMatches() {
         return matchRepo.findAll();
     }
 
-    public List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException {
+    public List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
                         () -> new JobOfferNotFoundException("not such JobOffer in DB"));
+        if(jobOfferInDb.isClosed()){
+            throw new JobOfferAlreadyClosed("Job offer is already Closed");
+        }
         List<Skill> jobskills = new ArrayList<Skill>();
         List<Match> matchesTemp = new ArrayList<Match>();
         for (JobOfferSkill jobOfferSkill : jobOfferInDb.getJobOfferSkills()) {
@@ -76,10 +80,13 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<Match> addAutomaticMatch(long jobOfferId) throws JobOfferNotFoundException {
+    public List<Match> addAutomaticMatch(long jobOfferId) throws JobOfferNotFoundException,JobOfferAlreadyClosed {
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
                         () -> new JobOfferNotFoundException("not such JobOffer in DB"));
+        if (jobOfferInDb.isClosed()) {
+            throw new JobOfferAlreadyClosed("JobOffer is already closed");
+        }
         List <Skill> jobskills = new ArrayList<Skill>();
         List <Match> matchesTemp = new ArrayList<Match>();
         List <Match> matches = matchRepo.findAll();
@@ -114,7 +121,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match addManuallyMatch(long jobOfferId, long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException {
+    public Match addManuallyMatch(long jobOfferId, long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
 
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
@@ -123,6 +130,12 @@ public class MatchServiceImpl implements MatchService {
         Applicant applicantInDb = applicantRepo.findById(applicantId)
                 .orElseThrow(
                         () -> new ApplicantNotFoundException("not such job Applicant in DB"));
+        if(jobOfferInDb.isClosed()){
+            throw new JobOfferAlreadyClosed("JobOffer is already closed");
+        }
+        if(applicantInDb.isClosed()){
+            throw new ApplicantAlreadyClosed("Applicant is already closed");
+        }
         Match newMatch = new Match();
         newMatch.setApplicant(applicantInDb);
         newMatch.setJobOffer(jobOfferInDb);
@@ -139,12 +152,6 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean deleteMatch(long matchIndex) {
-        matchRepo.deleteById(matchIndex);
-        return true;
-    }
-
-    @Override
     public Match getMatch(long matchId) throws MatchNotFoundException {
         Optional<Match> oMatch =
                 matchRepo.findById(matchId);
@@ -153,17 +160,21 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean finalizeMatch(long matchId) throws MatchNotFoundException {
+    public boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized  {
         Match match;
         Optional<Match> optionalMatch = matchRepo.findById(matchId);
         if(optionalMatch.isPresent()) {
             match = optionalMatch.get();
-            match.setFinalized(true);
-            match.getApplicant().setClosed(true);
-            match.getJobOffer().setClosed(true);
-            matchRepo.save(match);
-            return true;
+            if (match.isFinalized()==false) {
+                match.setFinalized(true);
+                match.setDof(LocalDate.now());
+                match.getApplicant().setClosed(true);
+                match.getJobOffer().setClosed(true);
+                matchRepo.save(match);
+                return true;
+            }else
+                throw new MatchAlreadyFinalized("Match is already finalized");
         }
-        else return false;
+        else throw new MatchNotFoundException("Match not found");
     }
 }

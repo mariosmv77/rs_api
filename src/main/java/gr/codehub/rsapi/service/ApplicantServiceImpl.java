@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
 import gr.codehub.rsapi.model.JobOffer;
@@ -47,7 +45,13 @@ public class ApplicantServiceImpl implements ApplicantService{
     }
 
     @Override
-    public Applicant addApplicant(Applicant applicant) {
+    public Applicant addApplicant(Applicant applicant) throws ApplicantCreationException {
+        if(applicant.getFirstName() == null || applicant.getLastName() == null || applicant.getRegion()== null
+            || applicant.getAddress() == null || applicant.getDob()== null)
+            throw new ApplicantCreationException("Please fill in all the fields");
+        if(applicant.getEmail()==null || !applicant.getEmail().contains("@"))
+            throw new ApplicantCreationException("Invalid applicant's Email ");
+
         return applicantRepo.save(applicant);
     }
 
@@ -57,6 +61,10 @@ public class ApplicantServiceImpl implements ApplicantService{
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantId);
         if(optionalApplicant.isPresent()){
             applicantInDb = optionalApplicant.get();
+            if(applicant.getFirstName()!=null)
+                applicantInDb.setFirstName(applicant.getFirstName());
+            if(applicant.getLastName()!=null)
+                applicantInDb.setLastName(applicant.getLastName());
             if(applicant.getAddress()!=null)
                 applicantInDb.setAddress(applicant.getAddress());
             if(applicant.getRegion()!=null)
@@ -71,11 +79,14 @@ public class ApplicantServiceImpl implements ApplicantService{
     }
 
     @Override
-    public Applicant deleteApplicant(long applicantIndex) throws  ApplicantNotFoundException{
+    public Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
         Applicant applicantInDb;
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantIndex);
         if (optionalApplicant.isPresent()){
             applicantInDb = optionalApplicant.get();
+            if(applicantInDb.isClosed()){
+                throw new ApplicantAlreadyClosed("applicant already closed");
+            }
             applicantInDb.setClosed(true);
             return applicantRepo.save(applicantInDb);
 
