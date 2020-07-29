@@ -1,9 +1,11 @@
 package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.exception.ApplicantNotFoundException;
+import gr.codehub.rsapi.exception.JobOfferNotFoundException;
 import gr.codehub.rsapi.exception.SkillNotFoundException;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
+import gr.codehub.rsapi.model.JobOffer;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.ApplicantSkillRepo;
@@ -14,7 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -55,6 +63,8 @@ public class ApplicantServiceImpl implements ApplicantService{
                 applicantInDb.setRegion(applicant.getRegion());
             if(applicant.getEmail()!=null)
                 applicantInDb.setEmail(applicant.getEmail());
+            if(applicant.getDob()!=null)
+                applicantInDb.setDob(applicant.getDob());
             applicantRepo.save(applicantInDb);
             return applicantInDb;
         }else throw new ApplicantNotFoundException("not such applicant exists");
@@ -88,8 +98,42 @@ public class ApplicantServiceImpl implements ApplicantService{
     }
 
     @Override
-    public List<Applicant> getSelectedApplicants(String criterion) {
-        return null;
+    public List<Applicant> getSelectedApplicants(String dob,
+                                               String region,
+                                               String name,
+                                               Long applicantSkillId) throws ApplicantNotFoundException, ParseException {
+        if (dob != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            LocalDate date = formatter.parse(dob).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            return applicantRepo.findByDob(date).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
+        }
+        if (region != null)
+            return applicantRepo.findByRegion(region).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
+        if (name != null)
+            return applicantRepo.findByFirstName(name).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
+        if (applicantSkillId != null){
+            List<Applicant> applicants = applicantRepo.findAll();
+            List<Applicant> tempApplicants = new ArrayList<Applicant>();
+            for (Applicant applicant : applicants) {
+
+                List<ApplicantSkill> applicantSkills = applicant.getApplicantSkills();
+
+                for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
+                    if(applicantSkill.getSkill().getId()==applicantSkillId){
+                        tempApplicants.add(applicant);
+                    }
+                    break;
+                }
+
+            }
+            return tempApplicants;
+
+        }
+//            return applicantRepo.findByApplicantSkills(applicantSkillId).orElseThrow(() -> new ApplicantNotFoundException("Job offer not found"));
+
+        return applicantRepo.findAll();
     }
 
     @Override

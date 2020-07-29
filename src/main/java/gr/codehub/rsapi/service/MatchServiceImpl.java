@@ -33,9 +33,46 @@ public class MatchServiceImpl implements MatchService {
         return matchRepo.findAll();
     }
 
-    @Override
     public List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException {
-        return null;
+        JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
+                .orElseThrow(
+                        () -> new JobOfferNotFoundException("not such JobOffer in DB"));
+        List<Skill> jobskills = new ArrayList<Skill>();
+        List<Match> matchesTemp = new ArrayList<Match>();
+        for (JobOfferSkill jobOfferSkill : jobOfferInDb.getJobOfferSkills()) {
+            jobskills.add(jobOfferSkill.getSkill());
+        }
+        List<Applicant> applicants = applicantRepo.findAll();
+        List<Match> matches = matchRepo.findAll();
+        for (Applicant applicant : applicants) {
+            boolean alreadyMatched = false;
+            Match newMatch = new Match();
+            List<ApplicantSkill> applicantSkillList = applicant.getApplicantSkills();
+            List<Skill> appskills = new ArrayList<Skill>();
+            for (Match match : matches) {
+                if (match.getApplicant().getId() == applicant.getId() && match.getJobOffer().getId()
+                        == jobOfferId ){
+                    alreadyMatched = true;
+                }
+            }
+            for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
+                appskills.add(applicantSkill.getSkill());
+            }
+            if (!applicant.isClosed()&& !alreadyMatched && !(appskills.containsAll(jobskills))) {
+                for (Skill skill : appskills)
+                {
+                    if (jobskills.contains(skill)){
+                        newMatch.setJobOffer(jobOfferInDb);
+                        newMatch.setApplicant(applicant);
+                        newMatch.setT(Match.type.PARTIAL);
+                        matchesTemp.add(newMatch);
+                        matchRepo.save(newMatch);
+                        break;
+                    }
+                }
+            }
+        }
+        return matchesTemp;
     }
 
     @Override
