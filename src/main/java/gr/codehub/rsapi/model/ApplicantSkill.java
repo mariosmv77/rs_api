@@ -20,16 +20,6 @@ public class ApplicantSkill {
     @JsonIgnore
     private Applicant applicant;
 
-    public Applicant set_Applicant(Applicant applicant) {
-        return this.applicant = applicant;
-    }
-
-    public Skill set_Skill(Skill skill) {
-       return this.skill = skill;
-    }
-
     @ManyToOne
     private Skill skill;
-
-
 }
