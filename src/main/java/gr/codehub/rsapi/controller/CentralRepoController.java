@@ -167,6 +167,4 @@ public class CentralRepoController {
         return skillService.deleteSkill(id);
     }
 
-    //ApplicantSkill Controller
-
 }

@@ -41,16 +41,33 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     }
 
+    /**
+     * This method search in Database the table of applicants
+     * @return a List with all applicants in Database
+     */
     @Override
     public List<Applicant> getApplicants() {
         return applicantRepo.findAll();
     }
+
+    /**
+     * This method add a new applicant to applicant table
+     * @param applicant
+     * @return the saved applicant
+     */
 
     @Override
     public Applicant addApplicant(Applicant applicant) {
         return applicantRepo.save(applicant);
     }
 
+    /**
+     * This is method updates the fields of an applicant with a specific id
+     * @param applicant
+     * @param applicantId
+     * @return applicantInDb
+     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
+     */
     @Override
     public Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException {
         Applicant applicantInDb;
@@ -70,6 +87,12 @@ public class ApplicantServiceImpl implements ApplicantService {
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
+    /**
+     * This method change the value of field isClosed to true
+     * @param applicantIndex
+     * @return the saved applicant with new values
+     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
+     */
     @Override
     public Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException {
         Applicant applicantInDb;
@@ -82,6 +105,12 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     }
 
+    /**
+     * This methhod find in Database an applicant with specific id
+     * @param applicantId
+     * @return the applicant with specific id
+     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
+     */
     @Override
     public Applicant getApplicant(long applicantId) throws ApplicantNotFoundException {
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantId);
@@ -93,6 +122,16 @@ public class ApplicantServiceImpl implements ApplicantService {
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
+    /**
+     * This method search in Database for Applicants who satisfy specific criteria
+     * @param dob
+     * @param region
+     * @param name
+     * @param applicantSkillId
+     * @return a list with applicants who satisfy specific criteria
+     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
+     * @throws ParseException in case the localDate have problem
+     */
     @Override
     public List<Applicant> getSelectedApplicants(String dob,
                                                  String region,
@@ -125,21 +164,32 @@ public class ApplicantServiceImpl implements ApplicantService {
                     }
                     break;
                 }
-
             }
             return tempApplicants;
 
         }
-//            return applicantRepo.findByApplicantSkills(applicantSkillId).orElseThrow(() -> new ApplicantNotFoundException("Job offer not found"));
-
         return applicantRepo.findAll();
     }
 
+    /**
+     *  This method read Applicants from excel
+     * @return saved applicants from excell
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     @Override
     public List<Applicant> readApplicants() throws IOException, InvalidFormatException {
         return FileReaderToList.readFromExcelApplicant("data.xlsx", applicantRepo, skillRepo, applicantSkillRepo);
     }
 
+    /**
+     * This method add a skill with specific id to an applicant
+     * @param applicantId
+     * @param skillId
+     * @return saved applicantskill
+     * @throws ApplicantNotFoundException in case where applicant with this id not exist
+     * @throws SkillNotFoundException in case were skill with specific id not exist
+     */
     @Override
     public ApplicantSkill addSkillToApplicant(long applicantId, long skillId) throws ApplicantNotFoundException, SkillNotFoundException {
         Applicant applicant = applicantRepo.findById(applicantId)
@@ -154,7 +204,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         applicantSkill.setSkill(skill);
         applicantSkillRepo.save(applicantSkill);
         applicant.getApplicantSkills().add(applicantSkill);
-        //  applicantRepo.save(applicant);
         return applicantSkill;
     }
 }
