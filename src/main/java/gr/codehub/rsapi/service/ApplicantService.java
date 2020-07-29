@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;

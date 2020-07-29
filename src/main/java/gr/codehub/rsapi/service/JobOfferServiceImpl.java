@@ -157,6 +157,6 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo, skillRepo,jobOfferSkillRepo);
+        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo, skillRepo, jobOfferSkillRepo);
     }
 }

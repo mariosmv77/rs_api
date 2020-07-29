@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
 import gr.codehub.rsapi.model.JobOffer;
@@ -104,7 +102,7 @@ public class ApplicantServiceImpl implements ApplicantService{
      * @throws ApplicantNotFoundException in case were applicant with specific id not exist
      */
     @Override
-    public Applicant deleteApplicant(long applicantIndex) throws  ApplicantNotFoundException{
+    public Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
         Applicant applicantInDb;
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantIndex);
         if (optionalApplicant.isPresent()){
@@ -118,6 +116,7 @@ public class ApplicantServiceImpl implements ApplicantService{
 
         }
         else throw new ApplicantNotFoundException("not such applicant exists");
+    }
 
     /**
      * This methhod find in Database an applicant with specific id

@@ -53,9 +53,6 @@ public class ReporterController {
     }
 
 
-    @GetMapping("matches")
-    public List<Match> getAllMatches(){
-        return reporterService.getAllMatches();
-    }
+
 
 }

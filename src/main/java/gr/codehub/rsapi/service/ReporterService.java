@@ -15,5 +15,5 @@ public interface ReporterService { // den eimai sigoyros oti xreiazetai ayto to 
     List<SurveyStatistics> getByMonth();
     void getReports(String nameOfXlsFile);// i xoris parametro kai apla dimiourgei ena neo excel arxeio
     HashSet<Skill> getNotMatchSkills();
-    List<Match> getAllMatches();
+
 }

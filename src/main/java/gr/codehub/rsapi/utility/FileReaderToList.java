@@ -64,7 +64,7 @@ public class FileReaderToList {
         workbook.close();
         return applicants;
     }
-    public static List<JobOffer> readFromExcelJobOffers(String filename, JobOfferRepo jobOfferRepository) throws IOException, InvalidFormatException {
+    public static List<JobOffer> readFromExcelJobOffers(String filename, JobOfferRepo jobOfferRepository,SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) throws IOException, InvalidFormatException {
         ArrayList<JobOffer> jobOffers = new ArrayList<>();
         File workbookFile = new File(filename);
         FileInputStream file = new FileInputStream(workbookFile);
@@ -77,7 +77,8 @@ public class FileReaderToList {
                 firstTime = false;
                 continue;
             }
-            jobOffers.add(new JobOffer()
+            JobOffer tempJobOffer = new JobOffer();
+            jobOffers.add(tempJobOffer
                     .setCompanyCust(row.getCell(0).getStringCellValue())
                     .setTitleCust(row.getCell(1).getStringCellValue())
                     .setRegionCust(row.getCell(2).getStringCellValue())
