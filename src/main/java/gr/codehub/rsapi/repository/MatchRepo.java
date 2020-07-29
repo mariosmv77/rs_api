@@ -24,18 +24,27 @@ public interface MatchRepo extends JpaRepository <Match, Long> {
         "group by { fn MONTHNAME(dof) }\n", nativeQuery = true)
 
     List<Match> getByMonth();
+
+
 /*select count(id), { fn MONTHNAME(dof) }as MonthName
 from Match
 where isFinalized =1
 
 group by { fn MONTHNAME(dof) }
-
+--------------------------------------------------
 SELECT  dof
 FROM Match
 where isFinalized =1
 and (dof between '2020-03-27 16:16:36.0246299' and '2020-07-29 16:16:36.0246299')
 ORDER BY dof DESC
 
+----------------------------------------------
+SELECT count(id), {fn WEEK( dof) } as WeekName
+FROM Match
+where isFinalized =1
+and (dof between '2020-03-27 16:16:36.0246299' and '2020-07-29 16:16:36.0246299')
+group by  {fn WEEK( dof) }
+-----------------------------------------------
 */
 
 }
