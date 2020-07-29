@@ -14,15 +14,22 @@ import java.util.List;
 
 public interface JobOfferService {
     List<JobOffer> getJobOffers();
+
     JobOffer addJobOffer(JobOffer jobOffer);
+
     JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException;
+
     JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException;
+
     JobOffer getJobOffer(long jobOfferId) throws JobOfferNotFoundException;
+
     List<JobOffer> getSelectedJobOffers(String offerDate,
                                         String region,
                                         String name,
                                         Long jobOfferSkillId) throws JobOfferNotFoundException, ParseException;
+
     JobOfferSkill addSkillToJobOffer(long jobOfferId, long skillId)
             throws JobOfferNotFoundException, SkillNotFoundException;
+
     List<JobOffer> readJobOffers() throws IOException, InvalidFormatException;
 }

@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class rs_api {
+public class Rs_api {
     public static void main(String[] args) {
-        SpringApplication.run(rs_api.class, args);
+        SpringApplication.run(Rs_api.class, args);
     }
 }

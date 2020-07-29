@@ -24,14 +24,17 @@ import java.util.Optional;
 
 @Service
 public class JobOfferServiceImpl implements JobOfferService {
-    @Autowired
+
     private JobOfferRepo jobOfferRepo;
-
-    @Autowired
     private SkillRepo skillRepo;
+    private JobOfferSkillRepo jobOfferSkillRepo;
 
     @Autowired
-    private JobOfferSkillRepo jobOfferSkillRepo;
+    public JobOfferServiceImpl(JobOfferRepo jobOfferRepo, SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) {
+        this.jobOfferRepo = jobOfferRepo;
+        this.skillRepo = skillRepo;
+        this.jobOfferSkillRepo = jobOfferSkillRepo;
+    }
 
     @Override
     public List<JobOffer> getJobOffers() {
@@ -43,6 +46,13 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferRepo.save(jobOffer);
     }
 
+    /**
+     *
+     * @param jobOffer
+     * @param jobOfferId
+     * @return
+     * @throws JobOfferNotFoundException
+     */
     @Override
     public JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException {
         JobOffer jobOfferInDB;
@@ -62,6 +72,12 @@ public class JobOfferServiceImpl implements JobOfferService {
         }else throw new JobOfferNotFoundException("not such joboffer exists");
     }
 
+    /**
+     *
+     * @param jobOfferIndex
+     * @return
+     * @throws JobOfferNotFoundException
+     */
     @Override
     public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException {
         JobOffer jobOfferinDB= jobOfferRepo.findById(jobOfferIndex)
@@ -136,6 +152,6 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo);
+        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo,skillRepo,jobOfferSkillRepo);
     }
 }
