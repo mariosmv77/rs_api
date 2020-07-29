@@ -28,7 +28,7 @@ public class RestApiErrorController implements ErrorController {
             return exception.getMessage();
         }
 
-        return String.format(exception.getMessage(),
+        return String.format("exception.getMessage()",
                 statusCode, exception==null? "N/A": exception.getMessage());
     }
 

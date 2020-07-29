@@ -46,6 +46,13 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferRepo.save(jobOffer);
     }
 
+    /**
+     *
+     * @param jobOffer
+     * @param jobOfferId
+     * @return
+     * @throws JobOfferNotFoundException
+     */
     @Override
     public JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException {
         JobOffer jobOfferInDB;
@@ -65,6 +72,12 @@ public class JobOfferServiceImpl implements JobOfferService {
         }else throw new JobOfferNotFoundException("not such joboffer exists");
     }
 
+    /**
+     *
+     * @param jobOfferIndex
+     * @return
+     * @throws JobOfferNotFoundException
+     */
     @Override
     public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException {
         JobOffer jobOfferinDB= jobOfferRepo.findById(jobOfferIndex)
