@@ -11,7 +11,7 @@ public interface ReporterService { // den eimai sigoyros oti xreiazetai ayto to 
     List<SurveyStatistics> getMostPopularOfferedSkills();
     List<SurveyStatistics> getMostPopularRequestedSkills();
     List<Match> getMatches(); // ayto idio me to getMatch tis class Match
-    List<Skill> getRecentFinalizedMatch();
+    List<Match> getRecentFinalizedMatch();
     List<SurveyStatistics> getByMonth();
     void getReports(String nameOfXlsFile);// i xoris parametro kai apla dimiourgei ena neo excel arxeio
     HashSet<Skill> getNotMatchSkills();

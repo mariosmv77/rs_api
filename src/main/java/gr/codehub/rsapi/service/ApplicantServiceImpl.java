@@ -64,13 +64,12 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public Applicant addApplicant(Applicant applicant) throws ApplicantCreationException {
         log.info("\nEnter addApplicant method");
-        log.info("\nExits addApplicant method after added applicant with name: " + applicant.getFirstName());
         if(applicant.getFirstName() == null || applicant.getLastName() == null || applicant.getRegion()== null
             || applicant.getAddress() == null || applicant.getDob()== null)
             throw new ApplicantCreationException("Please fill in all the fields");
         if(applicant.getEmail()==null || !applicant.getEmail().contains("@"))
             throw new ApplicantCreationException("Invalid applicant's Email ");
-
+        log.info("\nExits addApplicant method after added applicant with name: " + applicant.getFirstName());
         return applicantRepo.save(applicant);
     }
 
