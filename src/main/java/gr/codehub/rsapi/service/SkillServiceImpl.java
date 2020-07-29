@@ -4,6 +4,7 @@ import gr.codehub.rsapi.exception.SkillNotFoundException;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.SkillRepo;
 import gr.codehub.rsapi.utility.FileReaderToList;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
-public class SkillServiceImpl implements  SkillService {
+@Slf4j
+
+public class SkillServiceImpl implements SkillService {
 
 
     private SkillRepo skillRepo;
@@ -25,18 +30,23 @@ public class SkillServiceImpl implements  SkillService {
 
     @Override
     public List<Skill> getSkills() {
+        log.info("\nEnter getSkills method");
+        log.info("\nExits getSkills method after returns all skills");
         return skillRepo.findAll();
     }
 
 
     @Override
     public Skill addSkill(Skill skill) {
-
+        log.info("\nEnter addSkill method");
+        log.info("\nExits addSkill method after added skill with name: " + skill.getName());
         return skillRepo.save(skill);
     }
 
     @Override
     public Skill updateSkill(Skill skill, long skillId) throws SkillNotFoundException {
+        log.info("\nEnter updateApplicant method");
+
         Skill skillInDb;
         Optional<Skill> optionalSkill = skillRepo.findById(skillId);
         if(optionalSkill.isPresent()){
@@ -45,6 +55,7 @@ public class SkillServiceImpl implements  SkillService {
                 skillInDb.setName(skill.getName());
             }
             skillRepo.save(skillInDb);
+            log.info("\nExits updateApplicant, after update a skill with SkillId : " + skillId);
             return skillInDb;
         }else throw new SkillNotFoundException("not such skill exists");
 
@@ -52,15 +63,24 @@ public class SkillServiceImpl implements  SkillService {
 
     @Override
     public boolean deleteSkill(long skillIndex) throws SkillNotFoundException {
-        Skill skillInDb = skillRepo.findById(skillIndex).orElseThrow(() -> new SkillNotFoundException("not such skill exists"));
-        skillRepo.deleteById(skillIndex);
-        return true;
+        log.info("\nEnter deleteSkill");
+        Skill skillInDb;
+        Optional<Skill> optionalSkill = skillRepo.findById(skillIndex);
+        if (optionalSkill.isPresent()) {
+            skillInDb = optionalSkill.get();
+            skillRepo.deleteById(skillIndex);
+            log.info("\nExits deleteSkill,after deleting skill with the index: " + skillIndex);
 
+            return true;
 
+        }
+        else throw new SkillNotFoundException("not such skill exists");
     }
 
     @Override
     public List<Skill> readSkills() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelSkills("data.xlsx",skillRepo);
+        log.info("\nStart readSkills From Excel File");
+        log.info("\nExits readSkills From Excel File after successfully read it");
+        return FileReaderToList.readFromExcelSkills("data.xlsx", skillRepo);
     }
 }

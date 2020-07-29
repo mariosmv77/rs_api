@@ -19,13 +19,7 @@ public class Skill {
 
     private String name;
     private String levels;
-    public enum levels {
-        JUNIOR,
-        MIDDLE,
-        SENIOR
-    }
 
-    private levels lvl;
 
     public Skill setName(String name) {
         this.name = name;

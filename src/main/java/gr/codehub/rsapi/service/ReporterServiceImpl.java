@@ -38,13 +38,12 @@ public class ReporterServiceImpl implements ReporterService{
     }
 
     @Override
+    public List<Match> getRecentFinalizedMatch() {
+        return matchRepo.getRecentFinalizedMatch();
+    }
+    @Override
     public List<Match> getMatches() {
         return matchRepo.findAll();
-    }
-
-    @Override
-    public List<Skill> getRecentFinalizedMatch() {
-        return null;
     }
 
     @Override

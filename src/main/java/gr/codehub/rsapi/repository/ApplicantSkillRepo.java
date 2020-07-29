@@ -17,4 +17,7 @@ public interface ApplicantSkillRepo extends JpaRepository<ApplicantSkill, Long> 
            "GROUP BY ss.name \n" +
            "ORDER BY frequency DESC;", nativeQuery = true)
     List<SurveyStatistics> findMostOfferedSkill();
+
+
 }
+
