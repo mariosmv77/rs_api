@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class JobOfferServiceImpl implements JobOfferService {
 
     private JobOfferRepo jobOfferRepo;
@@ -38,49 +41,63 @@ public class JobOfferServiceImpl implements JobOfferService {
 
     @Override
     public List<JobOffer> getJobOffers() {
+        log.info("\nEnter getJobOffers method");
+        log.info("\nExits getJobOffers method and returns all JobOffers");
         return jobOfferRepo.findAll();
     }
 
     @Override
     public JobOffer addJobOffer(JobOffer jobOffer) {
+        log.info("\nEnter addJobOffer method") ;
+        log.info("\nExits jobOffer method with Job Offer title : " + jobOffer.getTitle());
+
         return jobOfferRepo.save(jobOffer);
     }
 
     @Override
     public JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException {
+        log.info("\nEnter updateJObOffer method" );
+
         JobOffer jobOfferInDB;
         Optional<JobOffer> optionalJobOffer = jobOfferRepo.findById(jobOfferId);
-        if(optionalJobOffer.isPresent()){
+        if (optionalJobOffer.isPresent()) {
             jobOfferInDB = optionalJobOffer.get();
-            if(jobOffer.getCompany()!=null)
+            if (jobOffer.getCompany() != null)
                 jobOfferInDB.setCompany(jobOffer.getCompany());
-            if(jobOffer.getRegion()!=null)
+            if (jobOffer.getRegion() != null)
                 jobOfferInDB.setRegion(jobOffer.getRegion());
-            if(jobOffer.getTitle()!=null)
+            if (jobOffer.getTitle() != null)
                 jobOfferInDB.setTitle(jobOffer.getTitle());
-            if(jobOffer.getOfferDate()!=null)
+            if (jobOffer.getOfferDate() != null)
                 jobOfferInDB.setOfferDate(jobOffer.getOfferDate());
             jobOfferRepo.save(jobOfferInDB);
+            log.info("\nExits updateJObOffer with JobOfferId : "+ jobOfferId  );
             return jobOfferInDB;
-        }else throw new JobOfferNotFoundException("not such joboffer exists");
+        } else throw new JobOfferNotFoundException("not such joboffer exists");
     }
 
     @Override
     public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException {
-        JobOffer jobOfferinDB= jobOfferRepo.findById(jobOfferIndex)
+        log.info("\nEnter deleteJobOffer");
+
+        JobOffer jobOfferinDB = jobOfferRepo.findById(jobOfferIndex)
                 .orElseThrow(() -> new JobOfferNotFoundException("No exist offer with this id"));
 
         jobOfferinDB.setClosed(true);
         jobOfferRepo.save(jobOfferinDB);
+        log.info("\nExits deleteJobOffer,after changing a Job from being available with the index: " + jobOfferIndex);
         return jobOfferinDB;
     }
 
     @Override
     public JobOffer getJobOffer(long jobOfferId) throws JobOfferNotFoundException {
+        log.info("\nEnter getJobOffer method" );
+
         Optional<JobOffer> oJobOffer = jobOfferRepo.findById(jobOfferId);
-        if (oJobOffer.isPresent())
+        if (oJobOffer.isPresent()) {
+            log.info("\nEnter getJobOffer method with jobOfferId: " + jobOfferId);
             return oJobOffer.get();
-        else throw new JobOfferNotFoundException("No Joboffer with this id");
+        } else throw new JobOfferNotFoundException("No Joboffer with this id");
     }
 
     @Override
@@ -89,33 +106,41 @@ public class JobOfferServiceImpl implements JobOfferService {
                                                String name,
                                                Long jobOfferSkillId) throws JobOfferNotFoundException, ParseException {
 
+        log.info("\nEnter getSelectedJobOffers method with arguments offerDate  or region or name or jobOfferSkillId" );
+
         if (offerDate != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             LocalDate date = formatter.parse(offerDate).toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
+            log.info("\nExits getSelectedJobOffers method, after returning JobOffers by Offer Date: " + offerDate );
             return jobOfferRepo.findByOfferDate(date).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
         }
-        if (region != null)
-            return jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
-        if (name != null)
-            return jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
+        if (region != null){
+            log.info("\nExits getSelectedJobOffers method, after returning JobOffers by region: " + region );
+            return jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
+        if (name != null){
+            log.info("\nExits getSelectedJobOffers method, after returning JobOffers by name: " + name );
+
+            return jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
         if (jobOfferSkillId != null) {
-          List<JobOffer> jobOffers = jobOfferRepo.findAll();
-          List<JobOffer> tempJobOffers= new ArrayList<JobOffer>();
-          for (JobOffer joboffer: jobOffers) {
+            List<JobOffer> jobOffers = jobOfferRepo.findAll();
+            List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
+            for (JobOffer joboffer : jobOffers) {
 
-              List<JobOfferSkill> jobOfferSkills = joboffer.getJobOfferSkills();
+                List<JobOfferSkill> jobOfferSkills = joboffer.getJobOfferSkills();
 
-              for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
-                  if(jobOfferSkill.getSkill().getId() == jobOfferSkillId){
-                      tempJobOffers.add(joboffer);
-                  }
+                for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
+                    if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
+                        tempJobOffers.add(joboffer);
+                    }
 
-              }
+                }
 
-          }
-          return tempJobOffers;
+            }
+            log.info("\nExits getSelectedApplicants method, after returning jobOffers by jobOfferSkillId" );
+
+            return tempJobOffers;
 
         }
         return jobOfferRepo.findAll();
@@ -125,6 +150,8 @@ public class JobOfferServiceImpl implements JobOfferService {
     @Override
     public JobOfferSkill addSkillToJobOffer(long jobOfferId, long skillID)
             throws JobOfferNotFoundException, SkillNotFoundException {
+        log.info("\nEnter addSkillToJobOffer method");
+
         JobOffer jobOffer = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(() -> new JobOfferNotFoundException("No Joboffer with this id"));
         Skill skill = skillRepo.findById(skillID)
@@ -134,11 +161,16 @@ public class JobOfferServiceImpl implements JobOfferService {
         jobOfferSkill.setJobOffer(jobOffer);
         jobOfferSkill.setSkill(skill);
         jobOfferSkillRepo.save(jobOfferSkill);
+        log.info("\nExits addSkillToJobOffer method, after adding skills to Job Offer with applicantId: "+ jobOfferId+ " and skill id: "+ skillID);
+
         return jobOfferSkill;
     }
 
     @Override
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo,skillRepo,jobOfferSkillRepo);
+        log.info("\nStart readJobOffers From Excel File");
+        log.info("\nExits readJobOffers From Excel File after successfully read it");
+
+        return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo, skillRepo, jobOfferSkillRepo);
     }
 }

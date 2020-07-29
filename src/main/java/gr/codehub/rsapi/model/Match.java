@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class Match {
     private long id;
 
     //dof = date of finalized
-    private LocalDate dof;
+    private LocalDateTime dof;
 
     public enum type {
         MANUAL,

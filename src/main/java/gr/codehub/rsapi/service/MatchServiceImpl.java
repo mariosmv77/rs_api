@@ -7,15 +7,22 @@ import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.MatchRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 @Service
+@Slf4j
 public class MatchServiceImpl implements MatchService {
 
     private MatchRepo matchRepo;
@@ -30,10 +37,15 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getMatches() {
+        log.info("\nEnter getMatches method");
+        log.info("\nExits getMatches method and returns all the matches");
+
         return matchRepo.findAll();
     }
 
     public List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException {
+        log.info("\nEnter addPartiallyMatch method ");
+
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
                         () -> new JobOfferNotFoundException("not such JobOffer in DB"));
@@ -51,17 +63,16 @@ public class MatchServiceImpl implements MatchService {
             List<Skill> appskills = new ArrayList<Skill>();
             for (Match match : matches) {
                 if (match.getApplicant().getId() == applicant.getId() && match.getJobOffer().getId()
-                        == jobOfferId ){
+                        == jobOfferId) {
                     alreadyMatched = true;
                 }
             }
             for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
                 appskills.add(applicantSkill.getSkill());
             }
-            if (!applicant.isClosed()&& !alreadyMatched && !(appskills.containsAll(jobskills))) {
-                for (Skill skill : appskills)
-                {
-                    if (jobskills.contains(skill)){
+            if (!applicant.isClosed() && !alreadyMatched && !(appskills.containsAll(jobskills))) {
+                for (Skill skill : appskills) {
+                    if (jobskills.contains(skill)) {
                         newMatch.setJobOffer(jobOfferInDb);
                         newMatch.setApplicant(applicant);
                         newMatch.setT(Match.type.PARTIAL);
@@ -72,18 +83,22 @@ public class MatchServiceImpl implements MatchService {
                 }
             }
         }
+        log.info("\nExits addPartiallyMatch method and add a match for jobOfferId : " + jobOfferId);
+
         return matchesTemp;
     }
 
     @Override
     public List<Match> addAutomaticMatch(long jobOfferId) throws JobOfferNotFoundException {
+        log.info("\nEnter addAutomaticMatch method ");
+
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
                         () -> new JobOfferNotFoundException("not such JobOffer in DB"));
-        List <Skill> jobskills = new ArrayList<Skill>();
-        List <Match> matchesTemp = new ArrayList<Match>();
-        List <Match> matches = matchRepo.findAll();
-        for(JobOfferSkill jobOfferSkill: jobOfferInDb.getJobOfferSkills()){
+        List<Skill> jobskills = new ArrayList<Skill>();
+        List<Match> matchesTemp = new ArrayList<Match>();
+        List<Match> matches = matchRepo.findAll();
+        for (JobOfferSkill jobOfferSkill : jobOfferInDb.getJobOfferSkills()) {
             jobskills.add(jobOfferSkill.getSkill());
         }
         List<Applicant> applicants = applicantRepo.findAll();
@@ -91,17 +106,17 @@ public class MatchServiceImpl implements MatchService {
         for (Applicant applicant : applicants) {
             boolean alreadymatched = false;
             Match newMatch = new Match();
-            List<ApplicantSkill> applicantSkillList= applicant.getApplicantSkills();
+            List<ApplicantSkill> applicantSkillList = applicant.getApplicantSkills();
             List<Skill> appskills = new ArrayList<Skill>();
 
-            for(ApplicantSkill applicantSkill: applicant.getApplicantSkills()){
+            for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
                 appskills.add(applicantSkill.getSkill());
             }
-            for(Match match : matches){
-                if(match.getApplicant().getId()==applicant.getId() && match.getJobOffer().getId() == jobOfferId)
+            for (Match match : matches) {
+                if (match.getApplicant().getId() == applicant.getId() && match.getJobOffer().getId() == jobOfferId)
                     alreadymatched = true;
             }
-            if (!applicant.isClosed() &&  appskills.containsAll(jobskills) && !alreadymatched) {
+            if (!applicant.isClosed() && appskills.containsAll(jobskills) && !alreadymatched) {
                 newMatch.setJobOffer(jobOfferInDb);
                 newMatch.setApplicant(applicant);
                 newMatch.setT(Match.type.AUTO);
@@ -110,11 +125,14 @@ public class MatchServiceImpl implements MatchService {
 
             }
         }
+        log.info("\nExits addAutomaticMatch method and add a match for jobOfferId : " + jobOfferId);
+
         return matchesTemp;
     }
 
     @Override
     public Match addManuallyMatch(long jobOfferId, long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException {
+        log.info("\nEnter addManuallyMatch method ");
 
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
                 .orElseThrow(
@@ -128,9 +146,10 @@ public class MatchServiceImpl implements MatchService {
         newMatch.setJobOffer(jobOfferInDb);
         newMatch.setT(Match.type.MANUAL);
         matchRepo.save(newMatch);
+        log.info("\nExits addManuallyMatch method and add a match for jobOfferId : " + jobOfferId +
+                " for the applicant with id: " + applicantId);
         return newMatch;
     }
-
 
 
     @Override
@@ -140,30 +159,41 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public boolean deleteMatch(long matchIndex) {
+        log.info("\nEnter deleteMatch method");
+        log.info("\nExits deleteMatch method, after deleting a manual match");
+
         matchRepo.deleteById(matchIndex);
         return true;
     }
 
     @Override
     public Match getMatch(long matchId) throws MatchNotFoundException {
+        log.info("\nEnter getMatch method ");
+
         Optional<Match> oMatch =
                 matchRepo.findById(matchId);
-        if (oMatch.isPresent()) return oMatch.get();
-        else throw new MatchNotFoundException("Match not found!");
+        if (oMatch.isPresent()) {
+            log.info("\nExits getMatch method, after get a match with match Id: " + matchId);
+            return oMatch.get();
+        } else throw new MatchNotFoundException("Match not found!");
     }
 
     @Override
     public boolean finalizeMatch(long matchId) throws MatchNotFoundException {
+        log.info("\nEnter finalizeMatch method ");
+
         Match match;
         Optional<Match> optionalMatch = matchRepo.findById(matchId);
-        if(optionalMatch.isPresent()) {
+        if (optionalMatch.isPresent()) {
             match = optionalMatch.get();
             match.setFinalized(true);
+            match.setDof(LocalDateTime.of(2020,04,20,2,11,6,9));
             match.getApplicant().setClosed(true);
             match.getJobOffer().setClosed(true);
             matchRepo.save(match);
+            log.info("\nExits finalizeMatch method, after finalizing a match with match Id: " + matchId);
+
             return true;
-        }
-        else return false;
+        } else return false;
     }
 }
