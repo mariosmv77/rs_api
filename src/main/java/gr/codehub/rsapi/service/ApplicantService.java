@@ -14,22 +14,15 @@ import java.util.List;
 
 public interface ApplicantService {
     List<Applicant> getApplicants();
-
-    Applicant addApplicant(Applicant applicant);
-
+    Applicant addApplicant(Applicant applicant) throws ApplicantCreationException;
     Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException;
-
-    Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException;
-
+    Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed;
     Applicant getApplicant(long applicantId) throws ApplicantNotFoundException;
-
     List<Applicant> getSelectedApplicants(String dob,
                                           String region,
                                           String name,
                                           Long ApplicantSkillId) throws ApplicantNotFoundException, ParseException;
-
     ApplicantSkill addSkillToApplicant(long applicantId, long skillId)
             throws ApplicantNotFoundException, SkillNotFoundException;
-
     List<Applicant> readApplicants() throws IOException, InvalidFormatException;
 }

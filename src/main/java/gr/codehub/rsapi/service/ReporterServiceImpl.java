@@ -17,14 +17,20 @@ import java.util.Map;
 @Service
 public class ReporterServiceImpl implements ReporterService{
 
-    @Autowired
-    private MatchRepo matchRepo;
-    @Autowired
+    private JobOfferRepo jobOfferRepo;
     private ApplicantRepo applicantRepo;
-    @Autowired
-    private ApplicantSkillRepo applicantSkillRepo;
-    @Autowired
     private JobOfferSkillRepo jobOfferSkillRepo;
+    private ApplicantSkillRepo applicantSkillRepo;
+    private MatchRepo matchRepo;
+
+    @Autowired
+    public ReporterServiceImpl(JobOfferRepo jobOfferRepo, ApplicantRepo applicantRepo, ApplicantSkillRepo applicantSkillRepo, JobOfferSkillRepo jobOfferSkillRepo, MatchRepo matchRepo) {
+        this.jobOfferRepo = jobOfferRepo;
+        this.applicantRepo = applicantRepo;
+        this.applicantSkillRepo = applicantSkillRepo;
+        this.jobOfferSkillRepo = jobOfferSkillRepo;
+        this.matchRepo = matchRepo;
+    }
 
     @Override
     public List<SurveyStatistics> getMostPopularOfferedSkills() {
@@ -60,6 +66,32 @@ public class ReporterServiceImpl implements ReporterService{
     @Override
     public void getReports(String nameOfXlsFile) {
 
+    }
+    @Override
+    public HashSet<Skill> getNotMatchSkills() {
+        List<ApplicantSkill> applicantSkills = applicantSkillRepo.findAll();
+        List<JobOfferSkill> jobOfferSkills = jobOfferSkillRepo.findAll();
+        HashSet<Skill> notMatchedSkills = new HashSet<Skill>();
+
+        for (JobOfferSkill jobofferSkill : jobOfferSkills) {
+            boolean match = false;
+            for (ApplicantSkill applicantSkill : applicantSkills) {
+                if (jobofferSkill.getSkill().getId() == applicantSkill.getSkill().getId()) {
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                notMatchedSkills.add(jobofferSkill.getSkill());
+            }
+        }
+
+
+        return notMatchedSkills;
+    }
+    @Override
+    public List<Match> getAllMatches() {
+        return matchRepo.findAll();
     }
 
 }

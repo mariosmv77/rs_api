@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.HashSet;
 
 @RestController
 public class ReporterController {
@@ -43,6 +44,18 @@ public class ReporterController {
     @GetMapping("MatchByMonth")
     public List<SurveyStatistics> getByMonth() {
         return reporterService.getByMonth();
+    }
+
+
+    @GetMapping("notmatched")
+    public HashSet<Skill> getNotMatchedSkills(){
+        return reporterService.getNotMatchSkills();
+    }
+
+
+    @GetMapping("matches")
+    public List<Match> getAllMatches(){
+        return reporterService.getAllMatches();
     }
 
 }

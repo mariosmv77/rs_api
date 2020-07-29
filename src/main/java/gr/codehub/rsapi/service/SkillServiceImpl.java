@@ -31,6 +31,7 @@ public class SkillServiceImpl implements  SkillService {
 
     @Override
     public Skill addSkill(Skill skill) {
+
         return skillRepo.save(skill);
     }
 
@@ -51,15 +52,11 @@ public class SkillServiceImpl implements  SkillService {
 
     @Override
     public boolean deleteSkill(long skillIndex) throws SkillNotFoundException {
-        Skill skillInDb;
-        Optional<Skill> optionalSkill = skillRepo.findById(skillIndex);
-        if (optionalSkill.isPresent()){
-            skillInDb = optionalSkill.get();
-            skillRepo.deleteById(skillIndex);
-            return true;
+        Skill skillInDb = skillRepo.findById(skillIndex).orElseThrow(() -> new SkillNotFoundException("not such skill exists"));
+        skillRepo.deleteById(skillIndex);
+        return true;
 
-        }
-        else throw new SkillNotFoundException("not such skill exists");
+
     }
 
     @Override

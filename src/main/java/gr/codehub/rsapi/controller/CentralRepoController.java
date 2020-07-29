@@ -1,8 +1,6 @@
 package gr.codehub.rsapi.controller;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
+import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.service.ApplicantService;
 import gr.codehub.rsapi.service.JobOfferService;
@@ -53,7 +51,7 @@ public class CentralRepoController {
     }
 
     @PostMapping("applicant")
-    public Applicant addApplicant(@RequestBody Applicant applicant) {
+    public Applicant addApplicant(@RequestBody Applicant applicant) throws ApplicantCreationException {
         return applicantService.addApplicant(applicant);
     }
 
@@ -63,7 +61,7 @@ public class CentralRepoController {
     }
 
     @DeleteMapping("applicant/{id}")
-    public Applicant deleteApplicant(@PathVariable long id) throws ApplicantNotFoundException {
+    public Applicant deleteApplicant(@PathVariable long id) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
         return applicantService.deleteApplicant(id);
     }
 
@@ -91,7 +89,7 @@ public class CentralRepoController {
     }
 
     @PostMapping("jobOffer")
-    public JobOffer addJobOffer(@RequestBody JobOffer jobOffer) {
+    public JobOffer addJobOffer(@RequestBody JobOffer jobOffer) throws JobOfferCreationException {
 
         return jobOfferService.addJobOffer(jobOffer);
     }
@@ -118,13 +116,13 @@ public class CentralRepoController {
     }
 
     @DeleteMapping("joboffer/{id}")
-    public JobOffer deleteJobOffer(long id) throws JobOfferNotFoundException{
+    public JobOffer deleteJobOffer(long id) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         return jobOfferService.deleteJobOffer(id);
     }
 
     @PutMapping("joboffer/{id}")
-    public JobOffer updateJobOffer(@RequestBody JobOffer jobOffer, long id) throws JobOfferNotFoundException{
-        return jobOfferService.updateJobOffer(jobOffer,id);
+    public JobOffer updateJobOffer(@RequestBody JobOffer jobOffer, long id) throws JobOfferNotFoundException {
+        return jobOfferService.updateJobOffer(jobOffer, id);
     }
 
     //-------------------------------------------------------------------//
