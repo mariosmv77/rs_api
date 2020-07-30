@@ -2,6 +2,10 @@ package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.*;
+import gr.codehub.rsapi.utility.SurveyMonth;
+import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
+import gr.codehub.rsapi.utility.SurveySkills;
+import gr.codehub.rsapi.utility.SurveyWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -31,19 +35,16 @@ public class ReporterServiceImpl implements ReporterService {
     }
 
     @Override
-    public List<SurveyStatistics> getMostPopularOfferedSkills() {
+    public List<SurveySkills> getMostPopularOfferedSkills() {
         log.info("\nEnter getMostPopularOfferedSkills method");
         log.info("\nExits getMostPopularOfferedSkills method after " +
                 " returning the most popular Offered Skills by Applicants");
-
-    public List<SurveySkills> getMostPopularOfferedSkills() {
         return applicantSkillRepo.findMostOfferedSkill();
-
     }
+
 
     @Override
     public List<SurveySkills> getMostPopularRequestedSkills() {
-    public List<SurveyStatistics> getMostPopularRequestedSkills() {
         log.info("\nEnter getMostPopularRequestedSkills method");
         log.info("\nExits getMostPopularRequestedSkills method after " +
                 " returning the most popular Requested Skills by JobOffers");
@@ -68,9 +69,9 @@ public class ReporterServiceImpl implements ReporterService {
 
     @Override
     public List<SurveyMonth> getByMonth() {
-                log.info("\nEnter getByMonth method");
-                log.info("\nExits getByMonth method after " +
-                        "providing report about finalized matches by month");
+        log.info("\nEnter getByMonth method");
+        log.info("\nExits getByMonth method after " +
+                "providing report about finalized matches by month");
         return matchRepo.getByMonth();
     }
 
@@ -80,10 +81,11 @@ public class ReporterServiceImpl implements ReporterService {
     }
 
     public List<SurveyNotMatchSkill> getNotMatchedSkills() {
-                log.info("\nEnter getNotMatchSkills method");
+        log.info("\nEnter getNotMatchSkills method");
         log.info("\nExits getNotMatchSkills method after " +
-                        "providing report about the skills that Applicants dont have, but Job offers require");
+                "providing report about the skills that Applicants dont have, but Job offers require");
         return matchRepo.getNotMatchedSkills();
 
 
+    }
 }

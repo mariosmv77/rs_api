@@ -118,10 +118,10 @@ public class JobOfferServiceImpl implements JobOfferService {
     }
 
     @Override
-    public JobOffer getJobOffer(String jobOfferId) throws JobOfferNotFoundException {
+    public JobOffer getJobOffer(long jobOfferId) throws JobOfferNotFoundException {
         log.info("\nEnter getJobOffer method" );
 
-        Optional<JobOffer> oJobOffer = jobOfferRepo.findById(Long.parseLong(jobOfferId));
+        Optional<JobOffer> oJobOffer = jobOfferRepo.findById(jobOfferId);
         if (oJobOffer.isPresent()) {
             log.info("\nEnter getJobOffer method with jobOfferId: " + jobOfferId);
             return oJobOffer.get();

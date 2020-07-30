@@ -19,7 +19,7 @@ public interface JobOfferService {
     JobOffer addJobOffer(JobOffer jobOffer) throws JobOfferCreationException;
     JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException;
     JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException, JobOfferAlreadyClosed;
-    JobOffer getJobOffer(String jobOfferId) throws JobOfferNotFoundException;
+    JobOffer getJobOffer(long jobOfferId) throws JobOfferNotFoundException;
     List<JobOffer> getSelectedJobOffers(String offerDate,
                                         String region,
                                         String name,
