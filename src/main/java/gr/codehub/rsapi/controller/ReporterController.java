@@ -50,6 +50,7 @@ public class ReporterController {
     private List<Match> getRecentFinalizedMatch(){
         return reporterService.getRecentFinalizedMatch();
     }
+
     @GetMapping("notmatched")
     public HashSet<Skill> getNotMatchedSkills(){
         return reporterService.getNotMatchSkills();
