@@ -7,6 +7,7 @@ import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.MatchRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -214,5 +215,13 @@ public class MatchServiceImpl implements MatchService {
                 throw new MatchAlreadyFinalized("Match is already finalized");
         }
         else throw new MatchNotFoundException("Match not found");
+    }
+
+    Match addManuallyMatchQuery(long jobOfferId, long applicantId)
+            throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
+
+
+
+        return null ;
     }
 }

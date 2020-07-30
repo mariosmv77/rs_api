@@ -40,9 +40,15 @@ public class CentralRepoController {
     //-----------------------------------------------------------------------------//
     //Applicant EndPoints
     @GetMapping("applicant")
-    public List<Applicant> getApplicants() {
+    public List<Applicant> getApplicants(@RequestParam(required = false) String firstName,
+                                         @RequestParam(required = false) String lastName,
+                                         @RequestParam(required = false) String address,
+                                         @RequestParam(required = false) String region,
+                                         @RequestParam(required = false) String email,
+                                         @RequestParam(required = false) String dob,
+                                         @RequestParam(required = false) String isClosed) {
 
-        return applicantService.getApplicants();
+        return applicantService.getApplicants(firstName, lastName, address, region, email, dob, isClosed );
     }
 
     @GetMapping("applicant/{id}")

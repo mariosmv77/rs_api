@@ -8,6 +8,9 @@ import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.ApplicantSkillRepo;
 import gr.codehub.rsapi.repository.SkillRepo;
+import gr.codehub.rsapi.repository.specs.ApplicantSpecification;
+import gr.codehub.rsapi.repository.specs.SearchCriteria;
+import gr.codehub.rsapi.repository.specs.SearchOperation;
 import gr.codehub.rsapi.utility.FileReaderToList;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +50,22 @@ public class ApplicantServiceImpl implements ApplicantService {
      * @return a List with all applicants in Database
      */
     @Override
-    public List<Applicant> getApplicants() {
+    public List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
+                                  String email, String dob, String isClosed) {
 
         log.info("\nEnter getApplicants method");
         log.info("\nExits getApplicants method and returns all applicants");
 
-        return applicantRepo.findAll();
+        ApplicantSpecification msTitleRating = new ApplicantSpecification();
+        if(firstName!=null) msTitleRating.add(new SearchCriteria("firstName", firstName, SearchOperation.MATCH));
+        if(lastName!=null) msTitleRating.add(new SearchCriteria("lastName", lastName, SearchOperation.MATCH));
+        if(address!=null) msTitleRating.add(new SearchCriteria("address", address, SearchOperation.MATCH));
+        if(region!=null) msTitleRating.add(new SearchCriteria("region", region, SearchOperation.MATCH));
+        if(email!=null)msTitleRating.add(new SearchCriteria("email", email, SearchOperation.MATCH));
+        if(isClosed!=null)msTitleRating.add(new SearchCriteria("isClosed", isClosed, SearchOperation.MATCH));
+        if(dob!=null) msTitleRating.add(new SearchCriteria("dob", dob, SearchOperation.GREATER_THAN));
+        List<Applicant> msTitleRatingList = applicantRepo.findAll(msTitleRating);
+        return msTitleRatingList;
     }
 
     /**
