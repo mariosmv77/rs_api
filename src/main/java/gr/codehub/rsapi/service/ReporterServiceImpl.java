@@ -2,7 +2,6 @@ package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,13 @@ public class ReporterServiceImpl implements ReporterService {
         log.info("\nExits getMostPopularOfferedSkills method after " +
                 " returning the most popular Offered Skills by Applicants");
 
+    public List<SurveySkills> getMostPopularOfferedSkills() {
         return applicantSkillRepo.findMostOfferedSkill();
 
     }
 
     @Override
+    public List<SurveySkills> getMostPopularRequestedSkills() {
     public List<SurveyStatistics> getMostPopularRequestedSkills() {
         log.info("\nEnter getMostPopularRequestedSkills method");
         log.info("\nExits getMostPopularRequestedSkills method after " +
@@ -66,44 +67,23 @@ public class ReporterServiceImpl implements ReporterService {
     }
 
     @Override
-    public List<SurveyStatistics> getByMonth() {
-
-        log.info("\nEnter getByMonth method");
-        log.info("\nExits getByMonth method after " +
-                "providing report about finalized matches by month");
+    public List<SurveyMonth> getByMonth() {
+                log.info("\nEnter getByMonth method");
+                log.info("\nExits getByMonth method after " +
+                        "providing report about finalized matches by month");
         return matchRepo.getByMonth();
     }
 
     @Override
-    public void getReports(String nameOfXlsFile) {
-
+    public List<SurveyWeek> getByWeek() {
+        return matchRepo.getByWeek();
     }
 
-    @Override
-    public HashSet<Skill> getNotMatchSkills() {
-        log.info("\nEnter getNotMatchSkills method");
-
-        List<ApplicantSkill> applicantSkills = applicantSkillRepo.findAll();
-        List<JobOfferSkill> jobOfferSkills = jobOfferSkillRepo.findAll();
-        HashSet<Skill> notMatchedSkills = new HashSet<Skill>();
-
-        for (JobOfferSkill jobofferSkill : jobOfferSkills) {
-            boolean match = false;
-            for (ApplicantSkill applicantSkill : applicantSkills) {
-                if (jobofferSkill.getSkill().getId() == applicantSkill.getSkill().getId()) {
-                    match = true;
-                    break;
-                }
-            }
-            if (!match) {
-                notMatchedSkills.add(jobofferSkill.getSkill());
-            }
-        }
+    public List<SurveyNotMatchSkill> getNotMatchedSkills() {
+                log.info("\nEnter getNotMatchSkills method");
         log.info("\nExits getNotMatchSkills method after " +
-                "providing report about the skills that Applicants dont have, but Job offers require");
-
-        return notMatchedSkills;
-    }
+                        "providing report about the skills that Applicants dont have, but Job offers require");
+        return matchRepo.getNotMatchedSkills();
 
 
 }

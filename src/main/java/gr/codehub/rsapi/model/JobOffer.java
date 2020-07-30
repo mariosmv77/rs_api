@@ -23,6 +23,10 @@ public class JobOffer {
     private String region;
     private boolean isClosed;
 
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     public JobOffer setCompanyCust(String company) {
         this.company = company;
         return this;
