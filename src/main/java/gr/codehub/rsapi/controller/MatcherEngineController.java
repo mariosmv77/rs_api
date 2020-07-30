@@ -31,7 +31,7 @@ public class MatcherEngineController {
     }
 
     @PutMapping("finalize/{id}")
-    public boolean finalizeMatch(@PathVariable long id)    throws MatchNotFoundException, MatchAlreadyFinalized {
+    public boolean finalizeMatch(@PathVariable long id)    throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         return matchService.finalizeMatch(id);
     }
 

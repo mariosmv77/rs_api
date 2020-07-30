@@ -27,6 +27,8 @@ public interface MatchRepo extends JpaRepository <Match, Long> {
     List<SurveyStatistics> getByMonth();
 
 
+
+
 /*select count(id), { fn MONTHNAME(dof) }as MonthName
 from Match
 where isFinalized =1
