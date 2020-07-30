@@ -39,7 +39,7 @@ public class MatcherEngineController {
     }
 
     @PutMapping("finalize/{id}")
-    public boolean finalizeMatch(@PathVariable long id) throws MatchNotFoundException, MatchAlreadyFinalized {
+    public boolean finalizeMatch(@PathVariable long id)    throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         log.info("\nPUT REQUEST: Calling finalizeMatch method ");
 
         return matchService.finalizeMatch(id);
@@ -52,7 +52,6 @@ public class MatcherEngineController {
 
         return matchService.addManuallyMatch(jobOfferId, applicantId);
     }
-
     @PostMapping("partial/{id}")
     public List<Match> partiallyMatch(@PathVariable long id) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         log.info("\nPOST REQUEST: Calling addPartiallyMatch method ");

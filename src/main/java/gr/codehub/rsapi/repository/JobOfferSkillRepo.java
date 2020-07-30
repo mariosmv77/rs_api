@@ -15,4 +15,12 @@ public interface JobOfferSkillRepo extends JpaRepository<JobOfferSkill, Long> {
             "GROUP BY ss.name \n" +
             "ORDER BY frequency DESC;",nativeQuery = true)
     List<SurveyStatistics> findMostRequestedSkills();
+
+
+//    @Query(value = "select  "
+
+
+//   )
+
+
 }

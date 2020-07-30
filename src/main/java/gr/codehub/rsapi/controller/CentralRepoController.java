@@ -6,7 +6,6 @@ import gr.codehub.rsapi.service.ApplicantService;
 import gr.codehub.rsapi.service.JobOfferService;
 import gr.codehub.rsapi.service.MatchService;
 import gr.codehub.rsapi.service.SkillService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,10 +43,16 @@ public class CentralRepoController {
     //-----------------------------------------------------------------------------//
     //Applicant EndPoints
     @GetMapping("applicant")
-    public List<Applicant> getApplicants() {
+    public List<Applicant> getApplicants(@RequestParam(required = false) String firstName,
+                                         @RequestParam(required = false) String lastName,
+                                         @RequestParam(required = false) String address,
+                                         @RequestParam(required = false) String region,
+                                         @RequestParam(required = false) String email,
+                                         @RequestParam(required = false) String dob,
+                                         @RequestParam(required = false) String isClosed) {
         log.info("\n GET REQUEST: Calling getApplicants method");
 
-        return applicantService.getApplicants();
+        return applicantService.getApplicants(firstName, lastName, address, region, email, dob, isClosed );
     }
 
     @GetMapping("applicant/{id}")
