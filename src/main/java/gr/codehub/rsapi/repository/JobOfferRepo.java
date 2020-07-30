@@ -14,6 +14,5 @@ import java.util.Optional;
 public interface JobOfferRepo extends JpaRepository<JobOffer, Long> {
     Optional <List<JobOffer>> findByOfferDate(LocalDate dateOffer);
     Optional <List<JobOffer>> findByTitle(String name);
-   // Optional <List<JobOffer>> findByJobOfferSkills(Long jobOfferSkillId);
     Optional <List<JobOffer>> findByRegion(String region);
 }

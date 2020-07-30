@@ -1,9 +1,6 @@
 package gr.codehub.rsapi.controller;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
 import gr.codehub.rsapi.exception.BusinessException;
-import gr.codehub.rsapi.exception.JobOfferNotFoundException;
-import gr.codehub.rsapi.exception.SkillNotFoundException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,9 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class RestApiErrorController implements ErrorController {
-
-    private Object ApplicantNotFoundException;
-    private Object SkillNotFoundException;
 
     @RequestMapping("error")
     @ResponseBody
@@ -28,8 +22,7 @@ public class RestApiErrorController implements ErrorController {
             return exception.getMessage();
         }
 
-        return String.format(exception.getMessage(),
-                statusCode, exception==null? "N/A": exception.getMessage());
+        return exception==null? "N/A": exception.getMessage();
     }
 
     @Override

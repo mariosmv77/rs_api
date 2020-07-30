@@ -2,8 +2,11 @@ package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.*;
+import gr.codehub.rsapi.utility.SurveyMonth;
+import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
+import gr.codehub.rsapi.utility.SurveySkills;
+import gr.codehub.rsapi.utility.SurveyWeek;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,13 +30,12 @@ public class ReporterServiceImpl implements ReporterService{
     }
 
     @Override
-    public List<SurveyStatistics> getMostPopularOfferedSkills() {
+    public List<SurveySkills> getMostPopularOfferedSkills() {
         return applicantSkillRepo.findMostOfferedSkill();
-
     }
 
     @Override
-    public List<SurveyStatistics> getMostPopularRequestedSkills() {
+    public List<SurveySkills> getMostPopularRequestedSkills() {
         return jobOfferSkillRepo.findMostRequestedSkills();
     }
 
@@ -47,36 +49,18 @@ public class ReporterServiceImpl implements ReporterService{
     }
 
     @Override
-    public List<SurveyStatistics> getByMonth() {
+    public List<SurveyMonth> getByMonth() {
         return matchRepo.getByMonth();
     }
 
     @Override
-    public void getReports(String nameOfXlsFile) {
-
+    public List<SurveyWeek> getByWeek() {
+        return matchRepo.getByWeek();
     }
+
     @Override
-    public HashSet<Skill> getNotMatchSkills() {
-        List<ApplicantSkill> applicantSkills = applicantSkillRepo.findAll();
-        List<JobOfferSkill> jobOfferSkills = jobOfferSkillRepo.findAll();
-        HashSet<Skill> notMatchedSkills = new HashSet<Skill>();
-
-        for (JobOfferSkill jobofferSkill : jobOfferSkills) {
-            boolean match = false;
-            for (ApplicantSkill applicantSkill : applicantSkills) {
-                if (jobofferSkill.getSkill().getId() == applicantSkill.getSkill().getId()) {
-                    match = true;
-                    break;
-                }
-            }
-            if (!match) {
-                notMatchedSkills.add(jobofferSkill.getSkill());
-            }
-        }
-
-
-        return notMatchedSkills;
+    public List<SurveyNotMatchSkill> getNotMatchedSkills() {
+        return matchRepo.getNotMatchedSkills();
     }
-
 
 }

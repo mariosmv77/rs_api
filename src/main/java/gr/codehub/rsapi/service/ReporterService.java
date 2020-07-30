@@ -1,19 +1,20 @@
 package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.Match;
-import gr.codehub.rsapi.model.Skill;
-import gr.codehub.rsapi.repository.SurveyStatistics;
+import gr.codehub.rsapi.utility.SurveyMonth;
+import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
+import gr.codehub.rsapi.utility.SurveySkills;
+import gr.codehub.rsapi.utility.SurveyWeek;
 
-import java.util.HashSet;
 import java.util.List;
 
-public interface ReporterService { // den eimai sigoyros oti xreiazetai ayto to service,mproyusan na ginoun sa methodoi apeutheias implementation
-    List<SurveyStatistics> getMostPopularOfferedSkills();
-    List<SurveyStatistics> getMostPopularRequestedSkills();
-    List<Match> getMatches(); // ayto idio me to getMatch tis class Match
+public interface ReporterService {
+    List<SurveySkills> getMostPopularOfferedSkills();
+    List<SurveySkills> getMostPopularRequestedSkills();
+    List<Match> getMatches();
     List<Match> getRecentFinalizedMatch();
-    List<SurveyStatistics> getByMonth();
-    void getReports(String nameOfXlsFile);// i xoris parametro kai apla dimiourgei ena neo excel arxeio
-    HashSet<Skill> getNotMatchSkills();
+    List<SurveyMonth> getByMonth();
+    List<SurveyNotMatchSkill> getNotMatchedSkills();
+    List<SurveyWeek> getByWeek();
 
 }
