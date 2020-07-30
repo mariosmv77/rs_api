@@ -1,6 +1,5 @@
 package gr.codehub.rsapi.controller;
 
-import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.Match;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.SurveyStatistics;
@@ -20,7 +19,7 @@ public class ReporterController {
     private MatchService matchService;
 
     @Autowired
-    public ReporterController(ReporterService reporterService,MatchService matchService) {
+    public ReporterController(ReporterService reporterService, MatchService matchService) {
         this.reporterService = reporterService;
         this.matchService = matchService;
     }
@@ -47,15 +46,14 @@ public class ReporterController {
     }
 
     @GetMapping("recentfinalized")
-    private List<Match> getRecentFinalizedMatch(){
+    private List<Match> getRecentFinalizedMatch() {
         return reporterService.getRecentFinalizedMatch();
     }
+
     @GetMapping("notmatched")
-    public HashSet<Skill> getNotMatchedSkills(){
+    public HashSet<Skill> getNotMatchedSkills() {
         return reporterService.getNotMatchSkills();
     }
-
-
 
 
 }
