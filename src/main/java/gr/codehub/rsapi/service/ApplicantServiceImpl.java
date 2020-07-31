@@ -51,7 +51,7 @@ public class ApplicantServiceImpl implements ApplicantService {
      */
     @Override
     public List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
-                                  String email, String dob, String isClosed) {
+                                  String email) {
 
         log.info("\nEnter getApplicants method");
         log.info("\nExits getApplicants method and returns all applicants");
@@ -62,8 +62,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         if(address!=null) msTitleRating.add(new SearchCriteria("address", address, SearchOperation.MATCH));
         if(region!=null) msTitleRating.add(new SearchCriteria("region", region, SearchOperation.MATCH));
         if(email!=null)msTitleRating.add(new SearchCriteria("email", email, SearchOperation.MATCH));
-        if(isClosed!=null)msTitleRating.add(new SearchCriteria("isClosed", isClosed, SearchOperation.MATCH));
-        if(dob!=null) msTitleRating.add(new SearchCriteria("dob", dob, SearchOperation.GREATER_THAN));
         List<Applicant> msTitleRatingList = applicantRepo.findAll(msTitleRating);
         return msTitleRatingList;
     }

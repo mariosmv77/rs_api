@@ -27,7 +27,7 @@ public class Match {
         PARTIAL
     }
 
-    private type t;
+    private type Type;
     private boolean isFinalized;
 
     @ManyToOne

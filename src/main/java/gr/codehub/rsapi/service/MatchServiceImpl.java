@@ -81,7 +81,7 @@ public class MatchServiceImpl implements MatchService {
                     if (jobskills.contains(skill)){
                         newMatch.setJobOffer(jobOfferInDb);
                         newMatch.setApplicant(applicant);
-                        newMatch.setT(Match.type.PARTIAL);
+                        newMatch.setType(Match.type.PARTIAL);
                         matchesTemp.add(newMatch);
                         matchRepo.save(newMatch);
                         break;
@@ -128,7 +128,7 @@ public class MatchServiceImpl implements MatchService {
             if (!applicant.isClosed() &&  appskills.containsAll(jobskills) && !alreadymatched) {
                 newMatch.setJobOffer(jobOfferInDb);
                 newMatch.setApplicant(applicant);
-                newMatch.setT(Match.type.AUTO);
+                newMatch.setType(Match.type.AUTO);
                 matchesTemp.add(newMatch);
                 matchRepo.save(newMatch);
 
@@ -159,7 +159,7 @@ public class MatchServiceImpl implements MatchService {
         Match newMatch = new Match();
         newMatch.setApplicant(applicantInDb);
         newMatch.setJobOffer(jobOfferInDb);
-        newMatch.setT(Match.type.MANUAL);
+        newMatch.setType(Match.type.MANUAL);
         matchRepo.save(newMatch);
         log.info("\nExits addManuallyMatch method and add a match for jobOfferId : " + jobOfferId +
                 " for the applicant with id: " + applicantId);

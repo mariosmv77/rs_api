@@ -10,18 +10,77 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 
+
+/**
+ * Implements all the REST verbs for the entity applicant
+ */
 public interface ApplicantService {
+    /**
+     * Required request parameters for the Applicant entity
+     *
+     * @param firstName
+     * @param lastName
+     * @param address
+     * @param region
+     * @param email
+     * @return the aplicant(s) with the given field
+     * and all aplicants if you don't give any of the parameters
+     */
     List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
-                                  String email, String dob, String isClosed);
+                                  String email);
+
+    /**
+     * This method add a new applicant to applicant table on DB
+     * @param applicant
+     * @return the saved applicant
+     * @throws ApplicantCreationException
+     */
     Applicant addApplicant(Applicant applicant) throws ApplicantCreationException;
+
+    /**
+     * This method updates the fields of an applicant with a specific id
+     * @param applicant
+     * @param applicantId
+     * @return applicantInDb
+     * @throws ApplicantNotFoundException
+     */
     Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException;
+
+    /**
+     * This method change the value of field isClosed to true
+     * @param applicantIndex
+     * @return
+     * @throws ApplicantNotFoundException
+     * @throws ApplicantAlreadyClosed
+     */
     Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed;
+
+    /**
+     * @param applicantId
+     * @return the applicant with the specific id
+     * @throws ApplicantNotFoundException
+     */
     Applicant getApplicant(long applicantId) throws ApplicantNotFoundException;
     List<Applicant> getSelectedApplicants(String dob,
                                           String region,
                                           String name,
                                           Long ApplicantSkillId) throws ApplicantNotFoundException, ParseException;
+
+    /**
+     * adds a new skill to the applicantSkill<list> of a specific applicant
+     * @param applicantId
+     * @param skillId
+     * @return
+     * @throws ApplicantNotFoundException
+     * @throws SkillNotFoundException
+     */
     ApplicantSkill addSkillToApplicant(long applicantId, long skillId)
             throws ApplicantNotFoundException, SkillNotFoundException;
+
+    /**
+     * @return writes to the database table applicants from a xls file
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     List<Applicant> readApplicants() throws IOException, InvalidFormatException;
 }

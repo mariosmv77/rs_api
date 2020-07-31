@@ -44,11 +44,10 @@ public class CentralRepoController {
                                          @RequestParam(required = false) String lastName,
                                          @RequestParam(required = false) String address,
                                          @RequestParam(required = false) String region,
-                                         @RequestParam(required = false) String email,
-                                         @RequestParam(required = false) String dob,
-                                         @RequestParam(required = false) String isClosed) {
+                                         @RequestParam(required = false) String email
+                                         ) {
 
-        return applicantService.getApplicants(firstName, lastName, address, region, email, dob, isClosed );
+        return applicantService.getApplicants(firstName, lastName, address, region, email);
     }
 
     @GetMapping("applicant/{id}")
