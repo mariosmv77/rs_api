@@ -30,6 +30,11 @@ public class Applicant {
 
 
 
+
+    /**
+     *Fluent API in order to read properly the xls file
+     *because the annotations initialize 0 parameter setters and getters
+     */
     public Applicant setfnamecustom(String fName) {
         this.firstName = fName;
         return  this;
@@ -63,8 +68,5 @@ public class Applicant {
 
     @OneToMany(mappedBy = "applicant")
     private List<Match> matches;
-
-
-
 
 }

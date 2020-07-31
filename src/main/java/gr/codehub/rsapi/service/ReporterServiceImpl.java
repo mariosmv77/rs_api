@@ -76,10 +76,23 @@ public class ReporterServiceImpl implements ReporterService {
     }
 
     @Override
+    public void getReports(String nameOfXlsFile) {
+
+    }
+
+
+
+    @Override
     public List<SurveyWeek> getByWeek() {
         return matchRepo.getByWeek();
     }
 
+    /**
+     * Finds the skills that applicants didn't have but
+     * where required by jobOffers
+     *
+     * @return
+     */
     public List<SurveyNotMatchSkill> getNotMatchedSkills() {
         log.info("\nEnter getNotMatchSkills method");
         log.info("\nExits getNotMatchSkills method after " +

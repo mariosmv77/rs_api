@@ -229,8 +229,6 @@ public class MatchServiceImpl implements MatchService {
     Match addManuallyMatchQuery(long jobOfferId, long applicantId)
             throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
 
-
-
         return null ;
     }
 }

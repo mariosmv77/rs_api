@@ -16,6 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileReaderToList {
+    /**
+     * Initializes the database table of applicant
+     * @param filename
+     * @param applicantRepository
+     * @param skillRepo
+     * @param applicantSkillRepo
+     * @return {@code List<Applicant>}
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static List<Applicant> readFromExcelApplicant(String filename, ApplicantRepo applicantRepository, SkillRepo skillRepo, ApplicantSkillRepo applicantSkillRepo) throws IOException, InvalidFormatException {
         List<Applicant> applicants = new ArrayList<>() ;
         File workbookFile = new File(filename);
@@ -64,6 +74,17 @@ public class FileReaderToList {
         workbook.close();
         return applicants;
     }
+
+    /**
+     * Initializes the database table of jobOffer
+     * @param filename
+     * @param jobOfferRepository
+     * @param skillRepo
+     * @param jobOfferSkillRepo
+     * @return {@code List<JobOffer>}
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static List<JobOffer> readFromExcelJobOffers(String filename, JobOfferRepo jobOfferRepository,SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) throws IOException, InvalidFormatException {
         ArrayList<JobOffer> jobOffers = new ArrayList<>();
         File workbookFile = new File(filename);
@@ -110,6 +131,15 @@ public class FileReaderToList {
         workbook.close();
         return jobOffers;
     }
+
+    /**
+     * Initializes the database table of Skills
+     * @param filename
+     * @param skillRepository
+     * @return
+     * @throws IOException
+     * @throws InvalidFormatException
+     */
     public static List<Skill> readFromExcelSkills(String filename, SkillRepo skillRepository) throws IOException, InvalidFormatException {
         ArrayList<Skill> skills = new ArrayList<>();
         File workbookFile = new File(filename);
