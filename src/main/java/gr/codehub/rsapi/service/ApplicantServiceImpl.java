@@ -138,10 +138,10 @@ public class ApplicantServiceImpl implements ApplicantService {
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantIndex);
         if (optionalApplicant.isPresent()) {
             applicantInDb = optionalApplicant.get();
-            if (applicantInDb.isClosed()) {
+            if (applicantInDb.isInactive()) {
                 throw new ApplicantAlreadyClosed("applicant already closed");
             }
-            applicantInDb.setClosed(true);
+            applicantInDb    .setInactive(true);
             log.info("\nExits deleteApplicant,after changing an Applicant from being available with the index: " + applicantIndex);
             return applicantRepo.save(applicantInDb);
         } else throw new ApplicantNotFoundException("not such applicant exists");

@@ -26,7 +26,7 @@ public class Applicant {
     private String region;
     private String email;
     private Date dob;
-    private boolean isClosed;
+    private boolean inactive;
 
 
 

@@ -43,7 +43,7 @@ class JobOfferServiceImplTest {
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setClosed(false);
+        jobOffer.setInactive(false);
         jobOffer.setOfferDate(new Date());
         jobOfferServiceImpl.addJobOffer(jobOffer);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
@@ -63,7 +63,7 @@ class JobOfferServiceImplTest {
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setClosed(false);
+        jobOffer.setInactive(false);
         jobOffer.setOfferDate(new Date());
         jobOfferServiceImpl.updateJobOffer(jobOffer,1);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
