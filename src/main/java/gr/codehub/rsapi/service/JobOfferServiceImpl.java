@@ -19,10 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -173,6 +171,7 @@ public class JobOfferServiceImpl implements JobOfferService {
         }
         return jobOfferRepo.findAll();
     }
+
 
 
     @Override
