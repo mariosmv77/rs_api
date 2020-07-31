@@ -15,6 +15,5 @@ import java.util.Optional;
 public interface ApplicantRepo extends JpaRepository<Applicant, Long>, JpaSpecificationExecutor<Applicant> {
     Optional <List<Applicant>> findByDob(LocalDate dob);
     Optional <List<Applicant>> findByFirstName(String name);
-    //Optional <List<Applicant>> findByApplicantSkills(Long applicantSkills);
     Optional <List<Applicant>> findByRegion(String region);
 }

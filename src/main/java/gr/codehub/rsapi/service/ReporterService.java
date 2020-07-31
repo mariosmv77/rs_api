@@ -1,12 +1,18 @@
 package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.Match;
-import gr.codehub.rsapi.model.Skill;
-import gr.codehub.rsapi.repository.SurveyStatistics;
+import gr.codehub.rsapi.utility.SurveyMonth;
+import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
+import gr.codehub.rsapi.utility.SurveySkills;
+import gr.codehub.rsapi.utility.SurveyWeek;
 
 import java.util.HashSet;
 import java.util.List;
 
+public interface ReporterService {
+    List<SurveySkills> getMostPopularOfferedSkills();
+    List<SurveySkills> getMostPopularRequestedSkills();
+    List<Match> getMatches();
 public interface ReporterService {
     /**
      * Finds the top 20 skills that are most common along the applicants
@@ -34,6 +40,9 @@ public interface ReporterService {
      * @return  {@code  List<Match>}
      */
     List<Match> getRecentFinalizedMatch();
+    List<SurveyMonth> getByMonth();
+    List<SurveyNotMatchSkill> getNotMatchedSkills();
+    List<SurveyWeek> getByWeek();
 
     /**
      *

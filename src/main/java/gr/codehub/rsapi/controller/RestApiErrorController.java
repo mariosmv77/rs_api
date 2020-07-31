@@ -23,13 +23,12 @@ public class RestApiErrorController implements ErrorController {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
 
-        if (exception instanceof BusinessException)
-        {
+        if (exception instanceof BusinessException) {
             return exception.getMessage();
         }
 
-        return String.format(exception.getMessage(),
-                statusCode, exception==null? "N/A": exception.getMessage());
+        return  "error code="+ statusCode + "Message= " + ((exception==null)?"N/A":exception.getMessage());
+
     }
 
     @Override

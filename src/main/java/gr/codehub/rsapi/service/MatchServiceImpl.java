@@ -60,15 +60,15 @@ public class MatchServiceImpl implements MatchService {
             jobskills.add(jobOfferSkill.getSkill());
         }
         List<Applicant> applicants = applicantRepo.findAll();
-        List<Match> matches = matchRepo.findAll();
+       // List<Match> matches = matchRepo.findAll();
         for (Applicant applicant : applicants) {
             boolean alreadyMatched = false;
             Match newMatch = new Match();
-            List<ApplicantSkill> applicantSkillList = applicant.getApplicantSkills();
+            //List<ApplicantSkill> applicantSkillList = applicant.getApplicantSkills();
             List<Skill> appskills = new ArrayList<Skill>();
-            for (Match match : matches) {
-                if (match.getApplicant().getId() == applicant.getId() && match.getJobOffer().getId()
-                        == jobOfferId ){
+            List<Match> appmatches = applicant.getMatches();
+            for (Match match : appmatches) {
+                if ( match.getJobOffer().getId()== jobOfferId ){
                     alreadyMatched = true;
                 }
             }
@@ -106,7 +106,7 @@ public class MatchServiceImpl implements MatchService {
         }
         List <Skill> jobskills = new ArrayList<Skill>();
         List <Match> matchesTemp = new ArrayList<Match>();
-        List <Match> matches = matchRepo.findAll();
+        //List <Match> matches = matchRepo.findAll();
         for(JobOfferSkill jobOfferSkill: jobOfferInDb.getJobOfferSkills()){
             jobskills.add(jobOfferSkill.getSkill());
         }
@@ -115,14 +115,16 @@ public class MatchServiceImpl implements MatchService {
         for (Applicant applicant : applicants) {
             boolean alreadymatched = false;
             Match newMatch = new Match();
-            List<ApplicantSkill> applicantSkillList= applicant.getApplicantSkills();
+          //  List<ApplicantSkill> applicantSkillList= applicant.getApplicantSkills();
             List<Skill> appskills = new ArrayList<Skill>();
 
             for(ApplicantSkill applicantSkill: applicant.getApplicantSkills()){
                 appskills.add(applicantSkill.getSkill());
             }
-            for(Match match : matches){
-                if(match.getApplicant().getId()==applicant.getId() && match.getJobOffer().getId() == jobOfferId)
+            List <Match> appmatches = applicant.getMatches();
+
+            for(Match match : appmatches){
+                if( match.getJobOffer().getId() == jobOfferId)
                     alreadymatched = true;
             }
             if (!applicant.isClosed() &&  appskills.containsAll(jobskills) && !alreadymatched) {
@@ -195,7 +197,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized  {
+    public boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         log.info("\nEnter finalizeMatch method ");
 
         Match match;
@@ -203,6 +205,13 @@ public class MatchServiceImpl implements MatchService {
         if(optionalMatch.isPresent()) {
             match = optionalMatch.get();
             if (match.isFinalized()==false) {
+                if(match.getJobOffer().isClosed()){
+                    throw new JobOfferAlreadyClosed("Job is already closed");
+                }
+
+                if(match.getApplicant().isClosed()){
+                    throw new ApplicantAlreadyClosed("Applicant is already closed");
+                }
                 match.setFinalized(true);
                 match.setDof(LocalDateTime.now());
                 match.getApplicant().setClosed(true);

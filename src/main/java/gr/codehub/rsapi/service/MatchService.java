@@ -18,5 +18,5 @@ public interface MatchService {
             throws MatchNotFoundException;
     Match getMatch(long matchId)
             throws MatchNotFoundException;
-    boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized;
+    boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed;
 }

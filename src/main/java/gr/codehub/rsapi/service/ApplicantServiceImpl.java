@@ -38,7 +38,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     private SkillRepo skillRepo;
 
     @Autowired
-    public ApplicantServiceImpl(ApplicantRepo applicantRepo,ApplicantSkillRepo applicantSkillRepo, SkillRepo skillRepo) {
+    public ApplicantServiceImpl(ApplicantRepo applicantRepo, ApplicantSkillRepo applicantSkillRepo, SkillRepo skillRepo) {
         this.applicantRepo = applicantRepo;
         this.applicantSkillRepo = applicantSkillRepo;
         this.skillRepo = skillRepo;
@@ -47,6 +47,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This method search in Database the table of applicants
+     *
      * @return a List with all applicants in Database
      */
     @Override
@@ -68,6 +69,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This method add a new applicant to applicant table
+     *
      * @param applicant
      * @return the saved applicant
      */
@@ -75,10 +77,10 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public Applicant addApplicant(Applicant applicant) throws ApplicantCreationException {
         log.info("\nEnter addApplicant method");
-        if(applicant.getFirstName() == null || applicant.getLastName() == null || applicant.getRegion()== null
-            || applicant.getAddress() == null || applicant.getDob()== null)
+        if (applicant.getFirstName() == null || applicant.getLastName() == null || applicant.getRegion() == null
+                || applicant.getAddress() == null || applicant.getDob() == null)
             throw new ApplicantCreationException("Please fill in all the fields");
-        if(applicant.getEmail()==null || !applicant.getEmail().contains("@"))
+        if (applicant.getEmail() == null || !applicant.getEmail().contains("@"))
             throw new ApplicantCreationException("Invalid applicant's Email ");
         log.info("\nExits addApplicant method after added applicant with name: " + applicant.getFirstName());
         return applicantRepo.save(applicant);
@@ -86,6 +88,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This is method updates the fields of an applicant with a specific id
+     *
      * @param applicant
      * @param applicantId
      * @return applicantInDb
@@ -97,29 +100,30 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         Applicant applicantInDb;
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantId);
-        if(optionalApplicant.isPresent()){
+        if (optionalApplicant.isPresent()) {
             applicantInDb = optionalApplicant.get();
-            if(applicant.getFirstName()!=null)
+            if (applicant.getFirstName() != null)
                 applicantInDb.setFirstName(applicant.getFirstName());
-            if(applicant.getLastName()!=null)
+            if (applicant.getLastName() != null)
                 applicantInDb.setLastName(applicant.getLastName());
-            if(applicant.getAddress()!=null)
+            if (applicant.getAddress() != null)
                 applicantInDb.setAddress(applicant.getAddress());
-            if(applicant.getRegion()!=null)
+            if (applicant.getRegion() != null)
                 applicantInDb.setRegion(applicant.getRegion());
-            if(applicant.getEmail()!=null)
+            if (applicant.getEmail() != null)
                 applicantInDb.setEmail(applicant.getEmail());
-            if(applicant.getDob()!=null)
+            if (applicant.getDob() != null)
                 applicantInDb.setDob(applicant.getDob());
             applicantRepo.save(applicantInDb);
 
             log.info("\nExits updateApplicant, after update an applicant with ApplicantId : " + applicantId);
             return applicantInDb;
-        }else throw new ApplicantNotFoundException("not such applicant exists");
+        } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
     /**
      * This method change the value of field isClosed to true
+     *
      * @param applicantIndex
      * @return the saved applicant with new values
      * @throws ApplicantNotFoundException in case were applicant with specific id not exist
@@ -130,9 +134,9 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         Applicant applicantInDb;
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantIndex);
-        if (optionalApplicant.isPresent()){
+        if (optionalApplicant.isPresent()) {
             applicantInDb = optionalApplicant.get();
-            if(applicantInDb.isClosed()){
+            if (applicantInDb.isClosed()) {
                 throw new ApplicantAlreadyClosed("applicant already closed");
             }
             applicantInDb.setClosed(true);
@@ -144,6 +148,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This methhod find in Database an applicant with specific id
+     *
      * @param applicantId
      * @return the applicant with specific id
      * @throws ApplicantNotFoundException in case were applicant with specific id not exist
@@ -160,13 +165,14 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This method search in Database for Applicants who satisfy specific criteria
+     *
      * @param dob
      * @param region
      * @param name
      * @param applicantSkillId
      * @return a list with applicants who satisfy specific criteria
      * @throws ApplicantNotFoundException in case were applicant with specific id not exist
-     * @throws ParseException in case the localDate have problem
+     * @throws ParseException             in case the localDate have problem
      */
     @Override
     public List<Applicant> getSelectedApplicants(String dob,
@@ -186,7 +192,8 @@ public class ApplicantServiceImpl implements ApplicantService {
 
         if (region != null) {
             log.info("\nExits getSelectedApplicants method, after returning applicants by region : " + region);
-            return applicantRepo.findByRegion(region).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));}
+            return applicantRepo.findByRegion(region).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
+        }
 
         if (name != null) {
             log.info("\nExits getSelectedApplicants method, after returning applicants by Firstname : " + name);
@@ -219,7 +226,8 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     /**
-     *  This method read Applicants from excel
+     * This method read Applicants from excel
+     *
      * @return saved applicants from excell
      * @throws IOException
      * @throws InvalidFormatException
@@ -234,11 +242,12 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     /**
      * This method add a skill with specific id to an applicant
+     *
      * @param applicantId
      * @param skillId
      * @return saved applicantskill
      * @throws ApplicantNotFoundException in case where applicant with this id not exist
-     * @throws SkillNotFoundException in case were skill with specific id not exist
+     * @throws SkillNotFoundException     in case were skill with specific id not exist
      */
     @Override
     public ApplicantSkill addSkillToApplicant(long applicantId, long skillId) throws ApplicantNotFoundException, SkillNotFoundException {

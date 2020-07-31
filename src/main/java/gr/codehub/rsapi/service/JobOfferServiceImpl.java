@@ -11,6 +11,7 @@ import gr.codehub.rsapi.repository.SkillRepo;
 import gr.codehub.rsapi.utility.FileReaderToList;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,6 +26,9 @@ import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The type Job offer service.
+ */
 @Service
 @Slf4j
 public class JobOfferServiceImpl implements JobOfferService {
@@ -33,6 +37,13 @@ public class JobOfferServiceImpl implements JobOfferService {
     private SkillRepo skillRepo;
     private JobOfferSkillRepo jobOfferSkillRepo;
 
+    /**
+     * Instantiates a new Job offer service.
+     *
+     * @param jobOfferRepo      the job offer repo
+     * @param skillRepo         the skill repo
+     * @param jobOfferSkillRepo the job offer skill repo
+     */
     @Autowired
     public JobOfferServiceImpl(JobOfferRepo jobOfferRepo, SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) {
         this.jobOfferRepo = jobOfferRepo;
