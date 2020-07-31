@@ -20,6 +20,9 @@ public class Skill {
     private String name;
     private String levels;
 
+    public Skill(long id) {
+        this.id = id;
+    }
 
     public Skill setName(String name) {
         this.name = name;

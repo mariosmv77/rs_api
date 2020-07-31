@@ -19,10 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -133,45 +131,48 @@ public class JobOfferServiceImpl implements JobOfferService {
                                                String region,
                                                String name,
                                                Long jobOfferSkillId) throws JobOfferNotFoundException, ParseException {
-
         log.info("\nEnter getSelectedJobOffers method with arguments offerDate  or region or name or jobOfferSkillId" );
-
+        List<JobOffer> jobOffersToBeFiltered = new ArrayList<>();
+        Date date  =new SimpleDateFormat("yyyy-MM-dd").parse(offerDate);
         if (offerDate != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            LocalDate date = formatter.parse(offerDate).toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by Offer Date: " + offerDate );
-            return jobOfferRepo.findByOfferDate(date).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
+            jobOffersToBeFiltered.addAll(jobOfferRepo.findByOfferDate(date).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));
+            for(JobOffer j: jobOffersToBeFiltered)
+                System.out.println(j.getOfferDate());
         }
         if (region != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by region: " + region );
-            return jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
+            jobOffersToBeFiltered.addAll(jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));
+        }
         if (name != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by name: " + name );
-
-            return jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
+            jobOffersToBeFiltered.addAll(jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));}
         if (jobOfferSkillId != null) {
-            List<JobOffer> jobOffers = jobOfferRepo.findAll();
-            List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
-            for (JobOffer joboffer : jobOffers) {
-
-                List<JobOfferSkill> jobOfferSkills = joboffer.getJobOfferSkills();
-
-                for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
-                    if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
-                        tempJobOffers.add(joboffer);
-                    }
-
-                }
-
+            List<JobOfferSkill> jobSkills =jobOfferSkillRepo.findBySkill(new Skill(jobOfferSkillId)).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
+            List<JobOffer> jobOffersBasedOnSkill = new ArrayList<>();
+            for (JobOfferSkill jobOfferSkill: jobSkills) {
+                jobOffersBasedOnSkill.add(jobOfferSkill.getJobOffer());
             }
+            jobOffersToBeFiltered.retainAll(jobOffersBasedOnSkill);
+//            List<JobOffer> jobOffers = jobOfferRepo.findAll();
+//            List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
+//            for (JobOffer joboffer : jobOffers) {
+//                for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
+//                    if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
+//                        tempJobOffers.add(joboffer);
+//                    }
+//                }
+//            }
+
             log.info("\nExits getSelectedApplicants method, after returning jobOffers by jobOfferSkillId" );
-
-            return tempJobOffers;
-
+//            jobOffersToBeFiltered.addAll(tempJobOffers);
         }
-        return jobOfferRepo.findAll();
+        return jobOffersToBeFiltered.stream()
+                //.filter(jobOffer -> jobOffer.getOfferDate().equals(date))
+                .filter(jobOffer -> jobOffer.getRegion().equals(region))
+                .filter(jobOffer -> jobOffer.getTitle().equals(name))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
 
