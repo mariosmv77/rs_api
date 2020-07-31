@@ -10,6 +10,6 @@ public class AppStartupRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        System.out.println("ssss");
+        System.out.println("THE APPLICATION STARTED-By CODE.HOBBISTES");
     }
 }

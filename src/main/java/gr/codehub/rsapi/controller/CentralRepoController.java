@@ -52,7 +52,7 @@ public class CentralRepoController {
                                          @RequestParam(required = false) String isClosed) {
         log.info("\n GET REQUEST: Calling getApplicants method");
 
-        return applicantService.getApplicants(firstName, lastName, address, region, email, dob, isClosed );
+        return applicantService.getApplicantsByCriteria(firstName, lastName, address, region, email, dob, isClosed );
     }
 
     @GetMapping("applicant/{id}")
