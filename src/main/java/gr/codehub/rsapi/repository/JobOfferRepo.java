@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface JobOfferRepo extends JpaRepository<JobOffer, Long> {
-    Optional <List<JobOffer>> findByOfferDate(Date dateOffer);
+    Optional <List<JobOffer>> findByOfferDate(LocalDate dateOffer);
     Optional <List<JobOffer>> findByTitle(String name);
     Optional <List<JobOffer>> findByRegion(String region);
 

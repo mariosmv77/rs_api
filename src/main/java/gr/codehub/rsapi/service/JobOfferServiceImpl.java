@@ -131,49 +131,47 @@ public class JobOfferServiceImpl implements JobOfferService {
                                                String region,
                                                String name,
                                                Long jobOfferSkillId) throws JobOfferNotFoundException, ParseException {
+
         log.info("\nEnter getSelectedJobOffers method with arguments offerDate  or region or name or jobOfferSkillId" );
-        List<JobOffer> jobOffersToBeFiltered = new ArrayList<>();
-        Date date  =new SimpleDateFormat("yyyy-MM-dd").parse(offerDate);
+
         if (offerDate != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            LocalDate date = formatter.parse(offerDate).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by Offer Date: " + offerDate );
-            jobOffersToBeFiltered.addAll(jobOfferRepo.findByOfferDate(date).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));
-            for(JobOffer j: jobOffersToBeFiltered)
-                System.out.println(j.getOfferDate());
+            return jobOfferRepo.findByOfferDate(date).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
         }
         if (region != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by region: " + region );
-            jobOffersToBeFiltered.addAll(jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));
-        }
+            return jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
         if (name != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by name: " + name );
-            jobOffersToBeFiltered.addAll(jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found")));}
-        if (jobOfferSkillId != null) {
-            List<JobOfferSkill> jobSkills =jobOfferSkillRepo.findBySkill(new Skill(jobOfferSkillId)).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));
-            List<JobOffer> jobOffersBasedOnSkill = new ArrayList<>();
-            for (JobOfferSkill jobOfferSkill: jobSkills) {
-                jobOffersBasedOnSkill.add(jobOfferSkill.getJobOffer());
-            }
-            jobOffersToBeFiltered.retainAll(jobOffersBasedOnSkill);
-//            List<JobOffer> jobOffers = jobOfferRepo.findAll();
-//            List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
-//            for (JobOffer joboffer : jobOffers) {
-//                for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
-//                    if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
-//                        tempJobOffers.add(joboffer);
-//                    }
-//                }
-//            }
 
+            return jobOfferRepo.findByTitle(name).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
+        if (jobOfferSkillId != null) {
+            List<JobOffer> jobOffers = jobOfferRepo.findAll();
+            List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
+            for (JobOffer joboffer : jobOffers) {
+
+                List<JobOfferSkill> jobOfferSkills = joboffer.getJobOfferSkills();
+
+                for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
+                    if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
+                        tempJobOffers.add(joboffer);
+                    }
+
+                }
+
+            }
             log.info("\nExits getSelectedApplicants method, after returning jobOffers by jobOfferSkillId" );
-//            jobOffersToBeFiltered.addAll(tempJobOffers);
+
+            return tempJobOffers;
+
         }
-        return jobOffersToBeFiltered.stream()
-                //.filter(jobOffer -> jobOffer.getOfferDate().equals(date))
-                .filter(jobOffer -> jobOffer.getRegion().equals(region))
-                .filter(jobOffer -> jobOffer.getTitle().equals(name))
-                .distinct()
-                .collect(Collectors.toList());
+        return jobOfferRepo.findAll();
     }
+
 
 
     @Override
