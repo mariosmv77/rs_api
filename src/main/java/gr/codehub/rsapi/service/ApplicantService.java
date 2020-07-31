@@ -11,8 +11,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ApplicantService {
-    List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
+    List<Applicant> getApplicants();
+    List<Applicant> getApplicantsByCriteria(String firstName, String lastName, String address, String region,
                                   String email, String dob, String isClosed);
+
     Applicant addApplicant(Applicant applicant) throws ApplicantCreationException;
     Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException;
     Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed;

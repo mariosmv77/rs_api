@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +45,7 @@ class JobOfferServiceImplTest {
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
         jobOffer.setClosed(false);
-        jobOffer.setOfferDate(new Date());
+        jobOffer.setOfferDate(LocalDate.now());
         jobOfferServiceImpl.addJobOffer(jobOffer);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
         assertEquals(1,jobOffers1.size());
@@ -64,7 +65,7 @@ class JobOfferServiceImplTest {
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
         jobOffer.setClosed(false);
-        jobOffer.setOfferDate(new Date());
+        jobOffer.setOfferDate(LocalDate.now());
         jobOfferServiceImpl.updateJobOffer(jobOffer,1);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
         //assertArrayEquals(jobOfferServiceImpl.getJobOffer("1"),jobOffer);
@@ -82,26 +83,18 @@ class JobOfferServiceImplTest {
         when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
         when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
         jobOfferServiceImpl.deleteJobOffer(1);
-       // assertArrayEquals1(jobOffers.get(0).getClosed(),true);
+     //   assertArrayEquals1(jobOffers.get(0).getClosed(),true);
     }
 
     private void assertArrayEquals1(Boolean isClosed, boolean b) {
     }
 
 
-    @Test
-    void getJobOffer() {
-    }
-
-    @Test
-    void getSelectedJobOffers() {
-    }
 
     @Test
     void addSkillToJobOffer() {
+
     }
 
-    @Test
-    void readJobOffers() {
-    }
+
 }

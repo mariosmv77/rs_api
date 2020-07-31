@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class FileReaderToList {
                     .setCompanyCust(row.getCell(0).getStringCellValue())
                     .setTitleCust(row.getCell(1).getStringCellValue())
                     .setRegionCust(row.getCell(2).getStringCellValue())
-                    .setOfferDatecust(row.getCell(3).getDateCellValue()));
+                    .setOfferDatecust(row.getCell(3).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
 
             tempJobOffer.setJobOfferSkills(new ArrayList<>());
             tempJobOffer =jobOfferRepository.save(tempJobOffer);

@@ -45,13 +45,18 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     }
 
+    @Override
+    public List<Applicant> getApplicants() {
+        return applicantRepo.findAll();
+    }
+
     /**
      * This method search in Database the table of applicants
      *
      * @return a List with all applicants in Database
      */
     @Override
-    public List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
+    public List<Applicant> getApplicantsByCriteria(String firstName, String lastName, String address, String region,
                                   String email, String dob, String isClosed) {
 
         log.info("\nEnter getApplicants method");
