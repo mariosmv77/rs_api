@@ -47,11 +47,9 @@ public class MatchServiceImpl implements MatchService {
 
     public List<Match> addPartiallyMatch(long jobOfferId) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         log.info("\nEnter addPartiallyMatch method ");
-
-        JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
-                .orElseThrow(
-                        () -> new JobOfferNotFoundException("not such JobOffer in DB"));
-        if(jobOfferInDb.isClosed()){
+       JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
+                .orElseThrow( () -> new JobOfferNotFoundException("not such JobOffer in DB"));
+        if(jobOfferInDb.isInactive()){
             throw new JobOfferAlreadyClosed("Job offer is already Closed");
         }
         List<Skill> jobskills = new ArrayList<Skill>();
@@ -60,11 +58,9 @@ public class MatchServiceImpl implements MatchService {
             jobskills.add(jobOfferSkill.getSkill());
         }
         List<Applicant> applicants = applicantRepo.findAll();
-       // List<Match> matches = matchRepo.findAll();
         for (Applicant applicant : applicants) {
             boolean alreadyMatched = false;
             Match newMatch = new Match();
-            //List<ApplicantSkill> applicantSkillList = applicant.getApplicantSkills();
             List<Skill> appskills = new ArrayList<Skill>();
             List<Match> appmatches = applicant.getMatches();
             for (Match match : appmatches) {
@@ -75,7 +71,7 @@ public class MatchServiceImpl implements MatchService {
             for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
                 appskills.add(applicantSkill.getSkill());
             }
-            if (!applicant.isClosed()&& !alreadyMatched && !(appskills.containsAll(jobskills))) {
+            if (!applicant.isInactive()&& !alreadyMatched && !(appskills.containsAll(jobskills))) {
                 for (Skill skill : appskills)
                 {
                     if (jobskills.contains(skill)){
@@ -90,50 +86,41 @@ public class MatchServiceImpl implements MatchService {
             }
         }
         log.info("\nExits addPartiallyMatch method and add a match for jobOfferId : " + jobOfferId);
-
         return matchesTemp;
     }
 
     @Override
     public List<Match> addAutomaticMatch(long jobOfferId) throws JobOfferNotFoundException,JobOfferAlreadyClosed {
         log.info("\nEnter addAutomaticMatch method ");
-
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
-                .orElseThrow(
-                        () -> new JobOfferNotFoundException("not such JobOffer in DB"));
-        if (jobOfferInDb.isClosed()) {
+                .orElseThrow( () -> new JobOfferNotFoundException("not such JobOffer in DB"));
+        if (jobOfferInDb.isInactive()) {
             throw new JobOfferAlreadyClosed("JobOffer is already closed");
         }
         List <Skill> jobskills = new ArrayList<Skill>();
         List <Match> matchesTemp = new ArrayList<Match>();
-        //List <Match> matches = matchRepo.findAll();
         for(JobOfferSkill jobOfferSkill: jobOfferInDb.getJobOfferSkills()){
             jobskills.add(jobOfferSkill.getSkill());
         }
         List<Applicant> applicants = applicantRepo.findAll();
-
         for (Applicant applicant : applicants) {
             boolean alreadymatched = false;
             Match newMatch = new Match();
-          //  List<ApplicantSkill> applicantSkillList= applicant.getApplicantSkills();
             List<Skill> appskills = new ArrayList<Skill>();
-
             for(ApplicantSkill applicantSkill: applicant.getApplicantSkills()){
                 appskills.add(applicantSkill.getSkill());
             }
             List <Match> appmatches = applicant.getMatches();
-
             for(Match match : appmatches){
                 if( match.getJobOffer().getId() == jobOfferId)
                     alreadymatched = true;
             }
-            if (!applicant.isClosed() &&  appskills.containsAll(jobskills) && !alreadymatched) {
+            if (!applicant.isInactive() &&  appskills.containsAll(jobskills) && !alreadymatched) {
                 newMatch.setJobOffer(jobOfferInDb);
                 newMatch.setApplicant(applicant);
                 newMatch.setType(Match.type.AUTO);
                 matchesTemp.add(newMatch);
                 matchRepo.save(newMatch);
-
             }
         }
         log.info("\nExits addAutomaticMatch method and add a match for jobOfferId : " + jobOfferId);
@@ -152,10 +139,10 @@ public class MatchServiceImpl implements MatchService {
         Applicant applicantInDb = applicantRepo.findById(applicantId)
                 .orElseThrow(
                         () -> new ApplicantNotFoundException("not such job Applicant in DB"));
-        if(jobOfferInDb.isClosed()){
+        if(jobOfferInDb.isInactive()){
             throw new JobOfferAlreadyClosed("JobOffer is already closed");
         }
-        if(applicantInDb.isClosed()){
+        if(applicantInDb.isInactive()){
             throw new ApplicantAlreadyClosed("Applicant is already closed");
         }
         Match newMatch = new Match();
@@ -205,17 +192,17 @@ public class MatchServiceImpl implements MatchService {
         if(optionalMatch.isPresent()) {
             match = optionalMatch.get();
             if (match.isFinalized()==false) {
-                if(match.getJobOffer().isClosed()){
+                if(match.getJobOffer().isInactive()){
                     throw new JobOfferAlreadyClosed("Job is already closed");
                 }
 
-                if(match.getApplicant().isClosed()){
+                if(match.getApplicant().isInactive()){
                     throw new ApplicantAlreadyClosed("Applicant is already closed");
                 }
                 match.setFinalized(true);
                 match.setDof(LocalDateTime.now());
-                match.getApplicant().setClosed(true);
-                match.getJobOffer().setClosed(true);
+                match.getApplicant().setInactive(true);
+                match.getJobOffer().setInactive(true);
                 matchRepo.save(match);
                 log.info("\nExits finalizeMatch method, after finalizing a match with match Id: " + matchId);
 

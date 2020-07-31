@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +44,8 @@ class JobOfferServiceImplTest {
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setClosed(false);
-        jobOffer.setOfferDate(new Date());
+        jobOffer.setInactive(false);
+        jobOffer.setOfferDate(LocalDate.now());
         jobOfferServiceImpl.addJobOffer(jobOffer);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
         assertEquals(1,jobOffers1.size());
@@ -63,8 +64,8 @@ class JobOfferServiceImplTest {
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setClosed(false);
-        jobOffer.setOfferDate(new Date());
+        jobOffer.setInactive(false);
+        jobOffer.setOfferDate(LocalDate.now());
         jobOfferServiceImpl.updateJobOffer(jobOffer,1);
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
         //assertArrayEquals(jobOfferServiceImpl.getJobOffer("1"),jobOffer);
@@ -99,9 +100,8 @@ class JobOfferServiceImplTest {
 
     @Test
     void addSkillToJobOffer() {
+
     }
 
-    @Test
-    void readJobOffers() {
-    }
+
 }

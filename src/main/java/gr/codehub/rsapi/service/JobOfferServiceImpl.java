@@ -108,10 +108,10 @@ public class JobOfferServiceImpl implements JobOfferService {
         JobOffer jobOfferinDB= jobOfferRepo.findById(jobOfferIndex)
                 .orElseThrow(() -> new JobOfferNotFoundException("No exist offer with this id"));
 
-        if(jobOfferinDB.isClosed()){
+        if(jobOfferinDB.isInactive()){
             throw new JobOfferAlreadyClosed("JobOffer is already closed");
         }
-        jobOfferinDB.setClosed(true);
+        jobOfferinDB.setInactive(true);
         jobOfferRepo.save(jobOfferinDB);
         log.info("\nExits deleteJobOffer,after changing a Job from being available with the index: " + jobOfferIndex);
         return jobOfferinDB;

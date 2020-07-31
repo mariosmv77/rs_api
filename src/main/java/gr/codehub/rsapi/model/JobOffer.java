@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,13 +20,10 @@ public class JobOffer {
 
     private String company;
     private String title;
-    private Date offerDate;
+    private LocalDate offerDate;
     private String region;
-    private boolean isClosed;
+    private boolean inactive;
 
-    public boolean isClosed() {
-        return isClosed;
-    }
 
     public JobOffer setCompanyCust(String company) {
         this.company = company;
@@ -42,7 +40,7 @@ public class JobOffer {
         return this;
     }
 
-    public JobOffer setOfferDatecust(Date offerDate) {
+    public JobOffer setOfferDatecust(LocalDate offerDate) {
         this.offerDate = offerDate;
         return this;
     }

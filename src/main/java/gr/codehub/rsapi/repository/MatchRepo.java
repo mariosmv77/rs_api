@@ -30,7 +30,7 @@ public interface MatchRepo extends JpaRepository <Match, Long> {
     @Query(value = "SELECT count(id)as NumberOfMatches, {fn WEEK( dof) } as NumberOfWeek\n" +
             "FROM Match\n" +
             "where isFinalized =1\n" +
-            "and (dof between '2020-03-27 16:16:36.0246299' and '2020-07-30 16:16:36.0246299')\n" +
+            "and (dof between '2020-03-27 16:16:36.0246299' and '2020-08-04 16:16:36.0246299')\n" +
             "group by  {fn WEEK( dof) }", nativeQuery = true)
     List<SurveyWeek> getByWeek();
 
