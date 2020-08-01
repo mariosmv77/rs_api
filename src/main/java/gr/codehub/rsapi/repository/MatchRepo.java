@@ -17,7 +17,6 @@ public interface MatchRepo extends JpaRepository <Match, Long> {
         "from Match  \n" +
         "where isFinalized =1  \n" +
         "order by dof desc ", nativeQuery = true)
-
     List<Match> getRecentFinalizedMatch();
 
     @Query(value = "select count(id) as Frequency, { fn MONTHNAME(dof) }as MonthName\n" +

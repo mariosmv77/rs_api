@@ -49,39 +49,18 @@ class JobOfferServiceImplTest {
     @Test
     void addJobOffer() {
         JobOffer jobOffer = new JobOffer();
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
-        //given
-        when( jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findAll()).thenReturn(jobOffers);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
         jobOffer.setInactive(false);
         jobOffer.setOfferDate(LocalDate.now());
-        jobOfferServiceImpl.addJobOffer(jobOffer);
-        List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
-        assertEquals(1,jobOffers1.size());
+        when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
+        JobOffer jobOffer1 = jobOfferServiceImpl.addJobOffer(jobOffer);
+        assertEquals(jobOffer1.getCompany(), jobOffer.getCompany());
     }
 
     @Test
     void updateJobOffer() throws JobOfferNotFoundException {
-        JobOffer jobOffer = new JobOffer();
-        jobOffer.setId(1);
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
-        Optional<JobOffer> jobOfferOptional= Optional.of(jobOffer);
-        //given
-        when( jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findById((long)1)).thenReturn(jobOfferOptional);
-        jobOffer.setCompany("Accenture");
-        jobOffer.setRegion("Athens");
-        jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setInactive(false);
-        jobOffer.setOfferDate(LocalDate.now());
-        jobOfferServiceImpl.updateJobOffer(jobOffer,1);
-        List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
-        assertEquals(jobOfferServiceImpl.getJobOffer(1),jobOffer);
     }
 
     @Test
@@ -90,9 +69,9 @@ class JobOfferServiceImplTest {
         jobOffer.setId(1);
         List<JobOffer> jobOffers = new ArrayList<>();
         jobOffers.add(jobOffer);
-        Optional<JobOffer> jobOfferOptional= Optional.of(jobOffer);
-        when( jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findById((long)1)).thenReturn(jobOfferOptional);
+        Optional<JobOffer> jobOfferOptional = Optional.of(jobOffer);
+        when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
+        when(jobOfferRepo.findById((long) 1)).thenReturn(jobOfferOptional);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
@@ -100,42 +79,37 @@ class JobOfferServiceImplTest {
         jobOffer.setOfferDate(LocalDate.now());
         List<JobOffer> jobOffers1 = jobOfferServiceImpl.getJobOffers();
         Assertions.assertThrows(JobOfferNotFoundException.class, () -> {
-            jobOfferServiceImpl.updateJobOffer(jobOffer,2);
+            jobOfferServiceImpl.updateJobOffer(jobOffer, 2);
         });
     }
 
     @Test
     void deleteJobOffer() throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         JobOffer jobOffer = new JobOffer();
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
+        jobOffer.setId(1);
         when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
         jobOfferServiceImpl.deleteJobOffer(1);
-       assertEquals(jobOffers.get(0).isInactive(),true);
+        assertEquals(jobOffer.isInactive(), true);
     }
 
     @Test
-    void deleteJobOfferJobOfferNotFoundException() throws JobOfferNotFoundException, JobOfferAlreadyClosed {
+    void deleteJobOfferJobOfferNotFoundException() {
         JobOffer jobOffer = new JobOffer();
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
+        jobOffer.setId(1);
         when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
-        jobOfferServiceImpl.deleteJobOffer(1);
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
         Assertions.assertThrows(JobOfferNotFoundException.class, () -> {
             jobOfferServiceImpl.deleteJobOffer(2);
         });
     }
 
     @Test
-    void deleteJobOfferJobOfferAlreadyClosed() throws JobOfferNotFoundException, JobOfferAlreadyClosed {
+    void deleteJobOfferJobOfferAlreadyClosed() {
         JobOffer jobOffer = new JobOffer();
         jobOffer.setInactive(true);
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
         when(jobOfferRepo.save(jobOffer)).thenReturn(jobOffer);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
         Assertions.assertThrows(JobOfferAlreadyClosed.class, () -> {
             jobOfferServiceImpl.deleteJobOffer(1);
         });
@@ -155,66 +129,58 @@ class JobOfferServiceImplTest {
     void addSkillToJobOffer() throws JobOfferNotFoundException, SkillNotFoundException {
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
+        jobOffer.setRegion("Athens");
+        jobOffer.setTitle("Junior Engineer");
         Skill skill = new Skill();
         skill.setId(1);
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
         skill.setLevels("mid");
         skill.setName("Java");
-        List<JobOfferSkill> skills = new ArrayList<>();
-        JobOfferSkill jobOfferSkill =new JobOfferSkill();
-        jobOfferSkill.setSkill(skill);
-        jobOffer.setJobOfferSkills(skills);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
-        when(skillRepo.findById((long)1)).thenReturn(Optional.of(skill));
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
+        when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
+        JobOfferSkill jobOfferSkill = jobOfferServiceImpl.addSkillToJobOffer(1, 1);
         when(jobOfferSkillRepo.save(jobOfferSkill)).thenReturn(jobOfferSkill);
-        jobOfferServiceImpl.addSkillToJobOffer(1,skill.getId());
-        assertEquals(jobOfferServiceImpl.getJobOffer(1),jobOffer);
+        assertEquals(1, jobOfferSkill.getSkill().getId());
+        assertEquals(1, jobOfferSkill.getJobOffer().getId());
     }
 
     @Test
     void addSkillToJobOfferTestJobOfferNotFoundException() {
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
+        jobOffer.setRegion("Athens");
+        jobOffer.setTitle("Junior Engineer");
         Skill skill = new Skill();
         skill.setId(1);
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
         skill.setLevels("mid");
         skill.setName("Java");
-        List<JobOfferSkill> skills = new ArrayList<>();
-        JobOfferSkill jobOfferSkill =new JobOfferSkill();
-        jobOfferSkill.setSkill(skill);
-        jobOffer.setJobOfferSkills(skills);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
-        when(skillRepo.findById((long)1)).thenReturn(Optional.of(skill));
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
+        when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
         when(jobOfferSkillRepo.save(jobOfferSkill)).thenReturn(jobOfferSkill);
         Assertions.assertThrows(JobOfferNotFoundException.class, () -> {
-            jobOfferServiceImpl.addSkillToJobOffer(2,skill.getId());
+            jobOfferServiceImpl.addSkillToJobOffer(2, 1);
         });
     }
 
     @Test
-    void addSkillToJobOfferTestSkillNotFoundException()  {
+    void addSkillToJobOfferTestSkillNotFoundException() {
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
+        jobOffer.setRegion("Athens");
+        jobOffer.setTitle("Junior Engineer");
         Skill skill = new Skill();
         skill.setId(1);
-        List<JobOffer> jobOffers = new ArrayList<>();
-        jobOffers.add(jobOffer);
         skill.setLevels("mid");
         skill.setName("Java");
-        List<JobOfferSkill> skills = new ArrayList<>();
-        JobOfferSkill jobOfferSkill =new JobOfferSkill();
-        jobOfferSkill.setSkill(skill);
-        jobOffer.setJobOfferSkills(skills);
-        when( jobOfferRepo.findById((long)1)).thenReturn(Optional.of(jobOffer));
-        when(skillRepo.findById((long)1)).thenReturn(Optional.of(skill));
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        when(jobOfferRepo.findById((long) 1)).thenReturn(Optional.of(jobOffer));
+        when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
         when(jobOfferSkillRepo.save(jobOfferSkill)).thenReturn(jobOfferSkill);
         Assertions.assertThrows(SkillNotFoundException.class, () -> {
-            jobOfferServiceImpl.addSkillToJobOffer(1,2);
+            jobOfferServiceImpl.addSkillToJobOffer(1, 2);
         });
     }
+
     @Test
     void readJobOffers() {
     }

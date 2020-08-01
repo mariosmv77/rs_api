@@ -7,6 +7,7 @@ import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
 import gr.codehub.rsapi.utility.SurveySkills;
 import gr.codehub.rsapi.utility.SurveyWeek;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -83,5 +84,7 @@ public class ReporterServiceImpl implements ReporterService {
         log.info("\nExits getNotMatchSkills method after " +
                 "providing report about the skills that Applicants dont have, but Job offers require");
         return matchRepo.getNotMatchedSkills();
+
+
     }
 }
