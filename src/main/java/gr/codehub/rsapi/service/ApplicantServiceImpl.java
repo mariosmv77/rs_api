@@ -153,7 +153,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         applicantSkill.setApplicant(applicant);
         applicantSkill.setSkill(skill);
         applicantSkillRepo.save(applicantSkill);
-        applicant.getApplicantSkills().add(applicantSkill);
 
         log.info("\nExits addSkillToApplicant method, after adding skills to applicant with applicantId: " +
                 applicantId + " and skill id: " + skillId);
