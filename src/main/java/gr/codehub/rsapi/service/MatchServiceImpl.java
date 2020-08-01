@@ -193,7 +193,7 @@ public class MatchServiceImpl implements MatchService {
             match = optionalMatch.get();
             if (match.isFinalized()==false) {
                 if(match.getJobOffer().isInactive()){
-                    throw new JobOfferAlreadyClosed("Job is already closed");
+                       throw new JobOfferAlreadyClosed("Job is already closed");
                 }
 
                 if(match.getApplicant().isInactive()){

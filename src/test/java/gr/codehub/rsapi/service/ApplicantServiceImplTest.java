@@ -1,5 +1,6 @@
 package gr.codehub.rsapi.service;
 
+import gr.codehub.rsapi.exception.ApplicantAlreadyClosed;
 import gr.codehub.rsapi.exception.ApplicantCreationException;
 import gr.codehub.rsapi.exception.ApplicantNotFoundException;
 import gr.codehub.rsapi.exception.SkillNotFoundException;
@@ -39,115 +40,168 @@ class ApplicantServiceImplTest {
     @Mock
     private ApplicantSkillRepo applicantSkillRepo;
 
-    @Test
-    void getApplicants() {
-    }
+
 
     @Test
     void addApplicant() throws ApplicantCreationException {
 
 
         Applicant applicant = new Applicant();
-        List<Applicant> applicants = new ArrayList<>();
-        applicants.add(applicant);
-        //given
-        when(applicantRepo.save(applicant)).thenReturn(applicant);
-        when(applicantRepo.findAll()).thenReturn(applicants);
         applicant.setFirstName("Maria");
         applicant.setLastName("Mariou");
         applicant.setAddress("Kanari 8888");
         applicant.setRegion("Athina");
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
-
-        applicantServiceImpl.addApplicant(applicant);
-        List<Applicant> applicants1 = applicantServiceImpl.getApplicants();
-        assertEquals(1, applicants1.size());
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
+        Applicant app1 = applicantServiceImpl.addApplicant(applicant);
+        assertNotNull(app1);
+        assertEquals(applicant.getFirstName(), app1.getFirstName());
     }
 
     @Test
     void addApplicantInvalidEmailException() throws ApplicantCreationException {
 
         Applicant applicant = new Applicant();
-        List<Applicant> applicants = new ArrayList<>();
-        applicants.add(applicant);
-        //given
-        when(applicantRepo.save(applicant)).thenReturn(applicant);
-        when(applicantRepo.findAll()).thenReturn(applicants);
         applicant.setFirstName("Maria");
         applicant.setLastName("mariou");
         applicant.setAddress("Kanari 88");
         applicant.setRegion("Athina");
         applicant.setEmail("agmail.gr");
         applicant.setDob(new Date());
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
 
-        List<Applicant> applicants1 = applicantServiceImpl.getApplicants();
         Assertions.assertThrows(ApplicantCreationException.class,
-                () -> {
-                    applicantServiceImpl.addApplicant(applicant);
+                () -> {Applicant applicant1= applicantServiceImpl.addApplicant(applicant);
                 });
 
     }
 
     @Test
+    void addApplicantNullFields() throws ApplicantCreationException{
+        Applicant applicant = new Applicant();
+        applicant.setFirstName("Maria");
+        applicant.setLastName("mariou");
+        applicant.setAddress("Kanari 88");
+        applicant.setRegion("Athina");
+        applicant.setEmail("agmail.gr");
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
+        Assertions.assertThrows(ApplicantCreationException.class,
+                () ->{Applicant applicant1 = applicantServiceImpl.addApplicant(applicant);
+        });
+    }
+
+    @Test
     void updateApplicant() {
+
     }
 
     @Test
-    void deleteApplicant() {
+    void deleteApplicant() throws ApplicantNotFoundException, ApplicantAlreadyClosed {
+        Applicant applicant = new Applicant();
+        applicant.setId(1);
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
+        when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
+        applicantServiceImpl.deleteApplicant(1);
+        assertEquals(applicantServiceImpl.getApplicant(1).isInactive(),true);
     }
 
     @Test
-    void getApplicant() {
+    void deleteApplicantInvalidId() throws ApplicantNotFoundException, ApplicantAlreadyClosed {
+        Applicant applicant = new Applicant();
+        applicant.setId(1);
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
+        when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
+        Assertions.assertThrows(ApplicantNotFoundException.class, () ->{applicantServiceImpl.deleteApplicant(2);
+
+        });
+
     }
+
+    @Test
+    void deleteApplicantAlreadyClosed() throws ApplicantNotFoundException, ApplicantAlreadyClosed {
+        Applicant applicant = new Applicant();
+        applicant.setId(1);
+        applicant.setInactive(true);
+        when(applicantRepo.save(applicant)).thenReturn(applicant);
+        when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
+        Assertions.assertThrows(ApplicantAlreadyClosed.class, () ->{applicantServiceImpl.deleteApplicant(1);
+
+        });
+
+    }
+
+
+
+
+    @Test
+    void getApplicant() throws ApplicantNotFoundException {
+        Applicant applicant = new Applicant();
+        applicant.setId(1);
+        applicant.setFirstName("vagelis");
+        when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
+        assertEquals("vagelis",applicantServiceImpl.getApplicant(1).getFirstName());
+    }
+
+    @Test
+    void getApplicantInvalidId() throws ApplicantNotFoundException {
+        Applicant applicant = new Applicant();
+        applicant.setId(1);
+        applicant.setFirstName("vagelis");
+        when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
+        Assertions.assertThrows(ApplicantNotFoundException.class,
+                () ->{applicantServiceImpl.getApplicant(2);}
+        );
+
+    }
+
+
 
     @Test
     void getSelectedApplicants() {
     }
 
-    @Test
-    void readApplicants() {
-    }
+
 
     @Test
     void addSkillToApplicant() throws ApplicantNotFoundException, SkillNotFoundException {
         Applicant applicant = new Applicant();
         applicant.setId(1);
+        applicant.setInactive(false);
+        applicant.setFirstName("afasf");
+        applicant.setLastName("weggwg");
+        applicant.setRegion("afja");
+        applicant.setAddress("ssgdsg");
+        applicant.setDob(new Date());
+        applicant.setEmail("anslganl@kjskgmil");
         Skill skill = new Skill();
         skill.setId(1);
-        List<Applicant> applicants = new ArrayList<>();
-        applicants.add(applicant);
-        skill.setLevels("mid");
-        skill.setName("Java");
-        List<ApplicantSkill> skills = new ArrayList<>();
-        ApplicantSkill applicantSkill = new ApplicantSkill();
-        applicantSkill.setSkill(skill);
-        applicant.setApplicantSkills(skills);
+        skill.setLevels("Senior");
+        skill.setName("Spring");
         when(applicantRepo.findById((long) 1)).thenReturn(Optional.of(applicant));
         when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
+        ApplicantSkill applicantSkill = applicantServiceImpl.addSkillToApplicant(1,1);
         when(applicantSkillRepo.save(applicantSkill)).thenReturn(applicantSkill);
-        applicantServiceImpl.addSkillToApplicant(1, skill.getId());
-        assertEquals(applicantServiceImpl.getApplicant(1), applicant);
+        assertEquals(1,applicantSkill.getApplicant().getId());
+        assertEquals(1,applicantSkill.getSkill().getId());
+
     }
 
     @Test
     void addSkillToApplicantTestApplicantNotFoundException() throws ApplicantNotFoundException, SkillNotFoundException {
         Applicant applicant = new Applicant();
         applicant.setId(1);
+        applicant.setAddress("Athinas 20");
+        applicant.setRegion("Salonika");
+        applicant.setFirstName("Dimitris");
+        applicant.setLastName("Dimitrioy");
         Skill skill = new Skill();
         skill.setId(1);
-        List<Applicant> applicants = new ArrayList<>();
-        applicants.add(applicant);
-        skill.setLevels("mid");
-        skill.setName("Java");
-        List<ApplicantSkill> skills = new ArrayList<>();
-        ApplicantSkill applicantSkill = new ApplicantSkill();
-        applicantSkill.setSkill(skill);
-        applicant.setApplicantSkills(skills);
+        skill.setLevels("Junior");
+        skill.setName("Python");
         when(applicantRepo.findById((long) 1)).thenReturn(Optional.of(applicant));
         when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
-        when(applicantSkillRepo.save(applicantSkill)).thenReturn(applicantSkill);
-        applicantServiceImpl.addSkillToApplicant(1, skill.getId());
+        ApplicantSkill applicantSkill =applicantServiceImpl.addSkillToApplicant(1, skill.getId());
         Assertions.assertThrows(ApplicantNotFoundException.class, () -> {
             applicantServiceImpl.addSkillToApplicant(2, skill.getId());
         });
@@ -158,18 +212,11 @@ class ApplicantServiceImplTest {
         applicant.setId(1);
         Skill skill = new Skill();
         skill.setId(1);
-        List<Applicant> applicants = new ArrayList<>();
-        applicants.add(applicant);
-        skill.setLevels("mid");
-        skill.setName("Java");
-        List<ApplicantSkill> skills = new ArrayList<>();
-        ApplicantSkill applicantSkill = new ApplicantSkill();
-        applicantSkill.setSkill(skill);
-        applicant.setApplicantSkills(skills);
+        skill.setLevels("Senior");
+        skill.setName("Python");
         when(applicantRepo.findById((long) 1)).thenReturn(Optional.of(applicant));
         when(skillRepo.findById((long) 1)).thenReturn(Optional.of(skill));
-        when(applicantSkillRepo.save(applicantSkill)).thenReturn(applicantSkill);
-        applicantServiceImpl.addSkillToApplicant(1, skill.getId());
+        ApplicantSkill applicantSkill =applicantServiceImpl.addSkillToApplicant(1, skill.getId());
         Assertions.assertThrows(SkillNotFoundException.class, () -> {
             applicantServiceImpl.addSkillToApplicant(1, 2);
         });
