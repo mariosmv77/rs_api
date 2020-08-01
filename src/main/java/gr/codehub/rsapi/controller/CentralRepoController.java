@@ -4,7 +4,6 @@ import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.service.ApplicantService;
 import gr.codehub.rsapi.service.JobOfferService;
-import gr.codehub.rsapi.service.MatchService;
 import gr.codehub.rsapi.service.SkillService;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,14 +23,12 @@ public class CentralRepoController {
     private JobOfferService jobOfferService;
     private SkillService skillService;
 
-
     @Autowired
     public CentralRepoController(ApplicantService applicantService, JobOfferService jobOfferService,
                                  SkillService skillService) {
         this.applicantService = applicantService;
         this.jobOfferService = jobOfferService;
         this.skillService = skillService;
-
     }
 
     //-----------------------------------------------------------------------------//
@@ -101,7 +92,7 @@ public class CentralRepoController {
 
     //-----------------------------------------------------------------//
     //Job offer
-    @PostMapping("jobOfferSkill/{jobOfferId}/{skillId}")
+    @PostMapping("jobOffer/{jobOfferId}/skill/{skillId}")
     public JobOfferSkill addSkillToJobOffer(@PathVariable long jobOfferId, @PathVariable long skillId) throws JobOfferNotFoundException, SkillNotFoundException {
         log.info("\n POST REQUEST: Calling addSkillToJobOffer method");
 
