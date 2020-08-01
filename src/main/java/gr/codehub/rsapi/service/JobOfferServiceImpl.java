@@ -64,13 +64,6 @@ public class JobOfferServiceImpl implements JobOfferService {
         return jobOfferRepo.save(jobOffer);
     }
 
-    /**
-     *
-     * @param jobOffer
-     * @param jobOfferId
-     * @return
-     * @throws JobOfferNotFoundException
-     */
     @Override
     public JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException {
         log.info("\nEnter updateJObOffer method" );

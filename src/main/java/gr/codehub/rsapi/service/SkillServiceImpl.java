@@ -64,10 +64,8 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public boolean deleteSkill(long skillIndex) throws SkillNotFoundException {
         log.info("\nEnter deleteSkill");
-        Skill skillInDb;
         Optional<Skill> optionalSkill = skillRepo.findById(skillIndex);
         if (optionalSkill.isPresent()) {
-            skillInDb = optionalSkill.get();
             skillRepo.deleteById(skillIndex);
             log.info("\nExits deleteSkill,after deleting skill with the index: " + skillIndex);
 
