@@ -18,7 +18,6 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //dof = date of finalized
     private LocalDateTime dof;
 
     public enum type {

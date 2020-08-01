@@ -1,6 +1,5 @@
 package gr.codehub.rsapi.service;
 
-import gr.codehub.rsapi.exception.ApplicantNotFoundException;
 import gr.codehub.rsapi.exception.JobOfferAlreadyClosed;
 import gr.codehub.rsapi.exception.JobOfferNotFoundException;
 import gr.codehub.rsapi.exception.SkillNotFoundException;
@@ -11,7 +10,6 @@ import gr.codehub.rsapi.repository.SkillRepo;
 import gr.codehub.rsapi.utility.FileReaderToList;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,13 +18,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * The type Job offer service.
- */
 @Service
 @Slf4j
 public class JobOfferServiceImpl implements JobOfferService {
@@ -35,13 +29,6 @@ public class JobOfferServiceImpl implements JobOfferService {
     private SkillRepo skillRepo;
     private JobOfferSkillRepo jobOfferSkillRepo;
 
-    /**
-     * Instantiates a new Job offer service.
-     *
-     * @param jobOfferRepo      the job offer repo
-     * @param skillRepo         the skill repo
-     * @param jobOfferSkillRepo the job offer skill repo
-     */
     @Autowired
     public JobOfferServiceImpl(JobOfferRepo jobOfferRepo, SkillRepo skillRepo, JobOfferSkillRepo jobOfferSkillRepo) {
         this.jobOfferRepo = jobOfferRepo;
@@ -60,17 +47,9 @@ public class JobOfferServiceImpl implements JobOfferService {
     public JobOffer addJobOffer(JobOffer jobOffer) {
         log.info("\nEnter addJobOffer method") ;
         log.info("\nExits jobOffer method with Job Offer title : " + jobOffer.getTitle());
-
         return jobOfferRepo.save(jobOffer);
     }
 
-    /**
-     *
-     * @param jobOffer
-     * @param jobOfferId
-     * @return
-     * @throws JobOfferNotFoundException
-     */
     @Override
     public JobOffer updateJobOffer(JobOffer jobOffer, long jobOfferId) throws JobOfferNotFoundException {
         log.info("\nEnter updateJObOffer method" );
@@ -93,12 +72,6 @@ public class JobOfferServiceImpl implements JobOfferService {
         }else throw new JobOfferNotFoundException("not such joboffer exists");
     }
 
-    /**
-     *
-     * @param jobOfferIndex
-     * @return
-     * @throws JobOfferNotFoundException
-     */
     @Override
     public JobOffer deleteJobOffer(long jobOfferIndex) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         log.info("\nEnter deleteJobOffer");
@@ -144,6 +117,7 @@ public class JobOfferServiceImpl implements JobOfferService {
         }
         if (region != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by region: " + region );
+
             return jobOfferRepo.findByRegion(region).orElseThrow(() -> new JobOfferNotFoundException("Job offer not found"));}
         if (name != null){
             log.info("\nExits getSelectedJobOffers method, after returning JobOffers by name: " + name );
@@ -153,21 +127,16 @@ public class JobOfferServiceImpl implements JobOfferService {
             List<JobOffer> jobOffers = jobOfferRepo.findAll();
             List<JobOffer> tempJobOffers = new ArrayList<JobOffer>();
             for (JobOffer joboffer : jobOffers) {
-
                 List<JobOfferSkill> jobOfferSkills = joboffer.getJobOfferSkills();
-
                 for (JobOfferSkill jobOfferSkill : joboffer.getJobOfferSkills()) {
                     if (jobOfferSkill.getSkill().getId() == jobOfferSkillId) {
                         tempJobOffers.add(joboffer);
                     }
-
                 }
-
             }
             log.info("\nExits getSelectedApplicants method, after returning jobOffers by jobOfferSkillId" );
 
             return tempJobOffers;
-
         }
         return jobOfferRepo.findAll();
     }
@@ -188,8 +157,8 @@ public class JobOfferServiceImpl implements JobOfferService {
         jobOfferSkill.setJobOffer(jobOffer);
         jobOfferSkill.setSkill(skill);
         jobOfferSkillRepo.save(jobOfferSkill);
-        log.info("\nExits addSkillToJobOffer method, after adding skills to Job Offer with applicantId: "+ jobOfferId+ " and skill id: "+ skillID);
-
+        log.info("\nExits addSkillToJobOffer method, after adding skills to Job Offer with applicantId: "
+                + jobOfferId+ " and skill id: "+ skillID);
         return jobOfferSkill;
     }
 
@@ -197,7 +166,6 @@ public class JobOfferServiceImpl implements JobOfferService {
     public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
         log.info("\nStart readJobOffers From Excel File");
         log.info("\nExits readJobOffers From Excel File after successfully read it");
-
         return FileReaderToList.readFromExcelJobOffers("data.xlsx", jobOfferRepo, skillRepo, jobOfferSkillRepo);
     }
 }

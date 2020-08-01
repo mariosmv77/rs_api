@@ -61,10 +61,6 @@ public interface ApplicantService {
      * @throws ApplicantNotFoundException
      */
     Applicant getApplicant(long applicantId) throws ApplicantNotFoundException;
-    List<Applicant> getSelectedApplicants(String dob,
-                                          String region,
-                                          String name,
-                                          Long ApplicantSkillId) throws ApplicantNotFoundException, ParseException;
 
     /**
      * adds a new skill to the applicantSkill<list> of a specific applicant

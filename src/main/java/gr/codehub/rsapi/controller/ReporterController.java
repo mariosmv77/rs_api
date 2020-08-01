@@ -7,55 +7,72 @@ import gr.codehub.rsapi.utility.SurveySkills;
 import gr.codehub.rsapi.utility.SurveyWeek;
 import gr.codehub.rsapi.service.MatchService;
 import gr.codehub.rsapi.service.ReporterService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class ReporterController {
 
     private ReporterService reporterService;
 
     @Autowired
-    public ReporterController(ReporterService reporterService,MatchService matchService) {
+    public ReporterController(ReporterService reporterService, MatchService matchService) {
         this.reporterService = reporterService;
     }
 
-    @GetMapping("ProposalMatches")
+    @GetMapping("proposalMatches")
     public List<Match> getProposalMatches() {
+        log.info("\nGET REQUEST: Calling getProposalMatches");
 
         return reporterService.getMatches();
     }
 
-    @GetMapping("MostOfferedSkills")
+    @GetMapping("mostOfferedSkills")
     public List<SurveySkills> getMostOfferedSkills() {
+        log.info("\nGET REQUEST: Calling getMostOfferedSkills");
+
         return reporterService.getMostPopularOfferedSkills();
     }
 
-    @GetMapping("MostRequestedSkills")
+    @GetMapping("mostRequestedSkills")
     public List<SurveySkills> getMostRequestedSkills() {
+        log.info("\nGET REQUEST: Calling getMostRequestedSkills");
+
         return reporterService.getMostPopularRequestedSkills();
     }
 
-    @GetMapping("recentfinalized")
-    private List<Match> getRecentFinalizedMatch(){
+    @GetMapping("recentFinalized")
+    private List<Match> getRecentFinalizedMatch() {
+        log.info("\nGET REQUEST: Calling getRecentFinalizedMatch");
+
         return reporterService.getRecentFinalizedMatch();
     }
 
-    @GetMapping("notmatched")
-    public List<SurveyNotMatchSkill> getNotMatchedSkills(){
+    @GetMapping("notMatched")
+    public List<SurveyNotMatchSkill> getNotMatchedSkills() {
+        log.info("\nGET REQUEST: Calling getNotMatchedSkills");
+
         return reporterService.getNotMatchedSkills();
     }
 
-    @GetMapping("MatchByMonth")
+    @GetMapping("matchByMonth")
     public List<SurveyMonth> getByMonth() {
+        log.info("\nGET REQUEST: Calling getByMonth");
+
         return reporterService.getByMonth();
     }
 
-    @GetMapping("MatchByWeek")
+    @GetMapping("matchByWeek")
     public List<SurveyWeek> getByWeek() {
+        log.info("\nGET REQUEST: Calling getByWeek");
+
         return reporterService.getByWeek();
     }
 }

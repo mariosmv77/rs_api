@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApplicantServiceImpl implements ApplicantService {
 
-
     private ApplicantRepo applicantRepo;
     private ApplicantSkillRepo applicantSkillRepo;
     private SkillRepo skillRepo;
@@ -45,34 +44,23 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     }
 
-    /**
-     * This method search in Database the table of applicants
-     *
-     * @return a List with all applicants in Database
-     */
+
     @Override
     public List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
-                                  String email) {
+                                         String email) {
 
         log.info("\nEnter getApplicants method");
-        log.info("\nExits getApplicants method and returns all applicants");
-
         ApplicantSpecification msTitleRating = new ApplicantSpecification();
-        if(firstName!=null) msTitleRating.add(new SearchCriteria("firstName", firstName, SearchOperation.MATCH));
-        if(lastName!=null) msTitleRating.add(new SearchCriteria("lastName", lastName, SearchOperation.MATCH));
-        if(address!=null) msTitleRating.add(new SearchCriteria("address", address, SearchOperation.MATCH));
-        if(region!=null) msTitleRating.add(new SearchCriteria("region", region, SearchOperation.MATCH));
-        if(email!=null)msTitleRating.add(new SearchCriteria("email", email, SearchOperation.MATCH));
+        if (firstName != null) msTitleRating.add(new SearchCriteria("firstName", firstName, SearchOperation.MATCH));
+        if (lastName != null) msTitleRating.add(new SearchCriteria("lastName", lastName, SearchOperation.MATCH));
+        if (address != null) msTitleRating.add(new SearchCriteria("address", address, SearchOperation.MATCH));
+        if (region != null) msTitleRating.add(new SearchCriteria("region", region, SearchOperation.MATCH));
+        if (email != null) msTitleRating.add(new SearchCriteria("email", email, SearchOperation.MATCH));
         List<Applicant> msTitleRatingList = applicantRepo.findAll(msTitleRating);
+
+        log.info("\nExits getApplicants method and returns all applicants or by specific criteria");
         return msTitleRatingList;
     }
-
-    /**
-     * This method add a new applicant to applicant table
-     *
-     * @param applicant
-     * @return the saved applicant
-     */
 
     @Override
     public Applicant addApplicant(Applicant applicant) throws ApplicantCreationException {
@@ -86,14 +74,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicantRepo.save(applicant);
     }
 
-    /**
-     * This is method updates the fields of an applicant with a specific id
-     *
-     * @param applicant
-     * @param applicantId
-     * @return applicantInDb
-     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
-     */
     @Override
     public Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException {
         log.info("\nEnter updateApplicant method");
@@ -121,13 +101,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
-    /**
-     * This method change the value of field isClosed to true
-     *
-     * @param applicantIndex
-     * @return the saved applicant with new values
-     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
-     */
     @Override
     public Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
         log.info("\nEnter deleteApplicant");
@@ -139,20 +112,13 @@ public class ApplicantServiceImpl implements ApplicantService {
             if (applicantInDb.isInactive()) {
                 throw new ApplicantAlreadyClosed("applicant already closed");
             }
-            applicantInDb    .setInactive(true);
+            applicantInDb.setInactive(true);
             log.info("\nExits deleteApplicant,after changing an Applicant from being available with the index: " + applicantIndex);
             return applicantRepo.save(applicantInDb);
         } else throw new ApplicantNotFoundException("not such applicant exists");
 
     }
 
-    /**
-     * This methhod find in Database an applicant with specific id
-     *
-     * @param applicantId
-     * @return the applicant with specific id
-     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
-     */
     @Override
     public Applicant getApplicant(long applicantId) throws ApplicantNotFoundException {
         log.info("\nEnter getApplicant method ");
@@ -163,94 +129,18 @@ public class ApplicantServiceImpl implements ApplicantService {
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
-    /**
-     * This method search in Database for Applicants who satisfy specific criteria
-     *
-     * @param dob
-     * @param region
-     * @param name
-     * @param applicantSkillId
-     * @return a list with applicants who satisfy specific criteria
-     * @throws ApplicantNotFoundException in case were applicant with specific id not exist
-     * @throws ParseException             in case the localDate have problem
-     */
-    @Override
-    public List<Applicant> getSelectedApplicants(String dob,
-                                                 String region,
-                                                 String name,
-                                                 Long applicantSkillId) throws ApplicantNotFoundException, ParseException {
-        log.info("\nEnter getSelectedApplicants method with arguments dob  or region or name or applicantSkillId");
-        if (dob != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            LocalDate date = formatter.parse(dob).toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
 
-            log.info("\nExits getSelectedApplicants method, after returning applicants by Date of birth : " + dob);
-            return applicantRepo.findByDob(date).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
-        }
-
-        if (region != null) {
-            log.info("\nExits getSelectedApplicants method, after returning applicants by region : " + region);
-            return applicantRepo.findByRegion(region).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
-        }
-
-        if (name != null) {
-            log.info("\nExits getSelectedApplicants method, after returning applicants by Firstname : " + name);
-
-            return applicantRepo.findByFirstName(name).orElseThrow(() -> new ApplicantNotFoundException("Applicant not found"));
-        }
-        if (applicantSkillId != null) {
-            List<Applicant> applicants = applicantRepo.findAll();
-            List<Applicant> tempApplicants = new ArrayList<Applicant>();
-            for (Applicant applicant : applicants) {
-
-                List<ApplicantSkill> applicantSkills = applicant.getApplicantSkills();
-
-                for (ApplicantSkill applicantSkill : applicant.getApplicantSkills()) {
-                    if (applicantSkill.getSkill().getId() == applicantSkillId) {
-                        tempApplicants.add(applicant);
-                    }
-                    break;
-                }
-
-            }
-            log.info("\nExits getSelectedApplicants method, after returning applicants by applicantSkills");
-
-            return tempApplicants;
-
-        }
-//            return applicantRepo.findByApplicantSkills(applicantSkillId).orElseThrow(() -> new ApplicantNotFoundException("Job offer not found"));
-
-        return applicantRepo.findAll();
-    }
-
-    /**
-     * This method read Applicants from excel
-     *
-     * @return saved applicants from excell
-     * @throws IOException
-     * @throws InvalidFormatException
-     */
     @Override
     public List<Applicant> readApplicants() throws IOException, InvalidFormatException {
         log.info("\nStart ReadApplicants From Excel File");
         log.info("\nExits ReadApplicants From Excel File after successfully read it");
-
         return FileReaderToList.readFromExcelApplicant("data.xlsx", applicantRepo, skillRepo, applicantSkillRepo);
     }
 
-    /**
-     * This method add a skill with specific id to an applicant
-     *
-     * @param applicantId
-     * @param skillId
-     * @return saved applicantskill
-     * @throws ApplicantNotFoundException in case where applicant with this id not exist
-     * @throws SkillNotFoundException     in case were skill with specific id not exist
-     */
+
     @Override
-    public ApplicantSkill addSkillToApplicant(long applicantId, long skillId) throws ApplicantNotFoundException, SkillNotFoundException {
+    public ApplicantSkill addSkillToApplicant(long applicantId, long skillId)
+            throws ApplicantNotFoundException, SkillNotFoundException {
         log.info("\nEnter addSkillToApplicant method");
         Applicant applicant = applicantRepo.findById(applicantId)
                 .orElseThrow(() -> new
@@ -265,8 +155,8 @@ public class ApplicantServiceImpl implements ApplicantService {
         applicantSkillRepo.save(applicantSkill);
         applicant.getApplicantSkills().add(applicantSkill);
 
-        log.info("\nExits addSkillToApplicant method, after adding skills to applicant with applicantId: " + applicantId + " and skill id: " + skillId);
-
+        log.info("\nExits addSkillToApplicant method, after adding skills to applicant with applicantId: " +
+                applicantId + " and skill id: " + skillId);
         return applicantSkill;
     }
 }

@@ -2,16 +2,12 @@ package gr.codehub.rsapi.controller;
 
 import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Match;
-import gr.codehub.rsapi.service.ApplicantService;
-import gr.codehub.rsapi.service.JobOfferService;
 import gr.codehub.rsapi.service.MatchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -39,7 +35,7 @@ public class MatcherEngineController {
     }
 
     @PutMapping("finalize/{id}")
-    public boolean finalizeMatch(@PathVariable long id)    throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
+    public boolean finalizeMatch(@PathVariable long id) throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         log.info("\nPUT REQUEST: Calling finalizeMatch method ");
 
         return matchService.finalizeMatch(id);
@@ -52,11 +48,26 @@ public class MatcherEngineController {
 
         return matchService.addManuallyMatch(jobOfferId, applicantId);
     }
+
     @PostMapping("partial/{id}")
     public List<Match> partiallyMatch(@PathVariable long id) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         log.info("\nPOST REQUEST: Calling addPartiallyMatch method ");
 
         return matchService.addPartiallyMatch(id);
+    }
+
+    @DeleteMapping("match/{matchId}")
+    public boolean deleteMatch(@PathVariable long matchId) {
+        log.info("\nDELETE REQUEST: Calling deleteMatch method ");
+
+        return matchService.deleteMatch(matchId);
+    }
+
+    @GetMapping("match/{matchId}")
+    public Match getMatch(@PathVariable long matchId) throws MatchNotFoundException {
+        log.info("\nGET REQUEST: Calling getMatch method");
+
+        return matchService.getMatch(matchId);
     }
 
 }

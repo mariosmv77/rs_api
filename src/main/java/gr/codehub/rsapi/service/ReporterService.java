@@ -59,8 +59,4 @@ public interface ReporterService {
      */
     List<SurveyMonth> getByMonth();
 
-
-    void getReports(String nameOfXlsFile);
-
-
 }

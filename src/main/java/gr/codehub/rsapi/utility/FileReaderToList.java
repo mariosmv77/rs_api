@@ -55,10 +55,7 @@ public class FileReaderToList {
 
             for (int i = 7; i<cellNumbers; i++) {
                    for (Skill skill: skills) {
-                       System.out.println(row.getCell(i).getStringCellValue());
-                       System.out.println(row.getCell(6).getStringCellValue());
                    if (skill.getName().equals(row.getCell(i).getStringCellValue()) && skill.getLevels().equals(row.getCell(6).getStringCellValue())) {
-                       System.out.println("!!!!!!skill.getName()"+ skill.getName() +"row.getCell(i).getStringCellValue()" +row.getCell(i).getStringCellValue());
                        ApplicantSkill applicantSkill = new ApplicantSkill();
                        applicantSkill.setApplicant(tempApplicant);
                        applicantSkill.setSkill(skill);
@@ -113,10 +110,7 @@ public class FileReaderToList {
 
             for (int i = 5; i<cellNumbers; i++) {
                 for (Skill skill: skills) {
-                    System.out.println(row.getCell(i).getStringCellValue());
-                    System.out.println(row.getCell(4).getStringCellValue());
                 if (skill.getName().equals(row.getCell(i).getStringCellValue()) && skill.getLevels().equals(row.getCell(4).getStringCellValue())) {
-                    System.out.println("!!!!!!skill.getName()" + skill.getName() + "row.getCell(i).getStringCellValue()" + row.getCell(i).getStringCellValue());
                     JobOfferSkill jobOfferSkill = new JobOfferSkill();
                     jobOfferSkill.setJobOffer(tempJobOffer);
                     jobOfferSkill.setSkill(skill);
@@ -147,7 +141,6 @@ public class FileReaderToList {
         FileInputStream file = new FileInputStream(workbookFile);
         Workbook workbook = WorkbookFactory.create(file);
         Sheet sheet = workbook.getSheetAt(2);
-        // DataFormatter dataFormatter = new DataFormatter();
         boolean firstTime = true;
         for (Row row : sheet) {
             if (firstTime) {

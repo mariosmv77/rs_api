@@ -26,9 +26,7 @@ public class RestApiErrorController implements ErrorController {
         if (exception instanceof BusinessException) {
             return exception.getMessage();
         }
-
-        return  "error code="+ statusCode + "Message= " + ((exception==null)?"N/A":exception.getMessage());
-
+        return "Error Code=" + statusCode + "Message= " + ((exception == null) ? "N/A" : exception.getMessage());
     }
 
     @Override

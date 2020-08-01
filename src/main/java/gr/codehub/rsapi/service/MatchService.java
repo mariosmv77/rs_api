@@ -49,18 +49,11 @@ public interface MatchService {
     List <Match> addAutomaticMatch(long jobOfferId)
             throws JobOfferNotFoundException, JobOfferAlreadyClosed;
 
-    /**
-     * @param match
-     * @param matchId
-     * @return
-     * @throws MatchNotFoundException
-     */
-    Match updateMatch(Match match, long matchId)
-            throws MatchNotFoundException;
 
     /**
+     * Gets a specific match from the match table (by iD)
      * @param matchId
-     * @return
+     * @return a certain match by ID
      * @throws MatchNotFoundException
      */
     Match getMatch(long matchId) throws MatchNotFoundException;
@@ -75,4 +68,12 @@ public interface MatchService {
      * @throws ApplicantAlreadyClosed
      */
     boolean finalizeMatch(long matchId) throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed;
+
+    /**
+     * Deletes a manual match from match table
+     * @param matchIndex
+     * @return {@code true on success}
+     */
+     boolean deleteMatch(long matchIndex) ;
+
 }

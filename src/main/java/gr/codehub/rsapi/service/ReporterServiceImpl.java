@@ -7,7 +7,6 @@ import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
 import gr.codehub.rsapi.utility.SurveySkills;
 import gr.codehub.rsapi.utility.SurveyWeek;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,7 +41,6 @@ public class ReporterServiceImpl implements ReporterService {
         return applicantSkillRepo.findMostOfferedSkill();
     }
 
-
     @Override
     public List<SurveySkills> getMostPopularRequestedSkills() {
         log.info("\nEnter getMostPopularRequestedSkills method");
@@ -76,29 +74,14 @@ public class ReporterServiceImpl implements ReporterService {
     }
 
     @Override
-    public void getReports(String nameOfXlsFile) {
-
-    }
-
-
-
-    @Override
     public List<SurveyWeek> getByWeek() {
         return matchRepo.getByWeek();
     }
 
-    /**
-     * Finds the skills that applicants didn't have but
-     * where required by jobOffers
-     *
-     * @return
-     */
     public List<SurveyNotMatchSkill> getNotMatchedSkills() {
         log.info("\nEnter getNotMatchSkills method");
         log.info("\nExits getNotMatchSkills method after " +
                 "providing report about the skills that Applicants dont have, but Job offers require");
         return matchRepo.getNotMatchedSkills();
-
-
     }
 }
