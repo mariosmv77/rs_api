@@ -25,7 +25,7 @@ public class JobOfferController {
     }
 
     //Job offer
-    @PostMapping("jobOfferSkill/{jobOfferId}/{skillId}")
+    @PostMapping("jobOfferSkill/{jobOfferId}/skill/{skillId}")
     public JobOfferSkill addSkillToJobOffer(@PathVariable long jobOfferId, @PathVariable long skillId) throws JobOfferNotFoundException, SkillNotFoundException {
         log.info("\n POST REQUEST: Calling addSkillToJobOffer method");
         return jobOfferService.addSkillToJobOffer(jobOfferId, skillId);

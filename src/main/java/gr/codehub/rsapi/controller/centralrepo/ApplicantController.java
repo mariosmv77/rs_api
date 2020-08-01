@@ -62,7 +62,7 @@ public class ApplicantController {
     }
 
 
-    @PostMapping("applicant/{applicantId}/{skillId}")
+    @PostMapping("applicant/{applicantId}/skill/{skillId}")
     public ApplicantSkill addApplicantSkill(@PathVariable long applicantId, @PathVariable long skillId) throws ApplicantNotFoundException, SkillNotFoundException {
         log.info("\n POST REQUEST: Calling addSkillToApplicant method");
         return applicantService.addSkillToApplicant(applicantId, skillId);
