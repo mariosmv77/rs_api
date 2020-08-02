@@ -34,7 +34,7 @@ class MatchServiceImplTest {
 
 
     @Test
-    void addManuallyMatch() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException, InterruptedException {
+    void addManuallyMatch() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException, AlreadyMatched {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -44,6 +44,7 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        applicant.setMatches(new ArrayList<Match>());
         ApplicantSkill applicantSkill = new ApplicantSkill();
         JobOfferSkill jobOfferSkill = new JobOfferSkill();
         JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
@@ -86,7 +87,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void addManuallyMatchInvalidApplicant() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException {
+    void addManuallyMatchInvalidApplicant() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException, AlreadyMatched {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -96,6 +97,7 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        applicant.setMatches(new ArrayList<Match>());
         ApplicantSkill applicantSkill = new ApplicantSkill();
         JobOfferSkill jobOfferSkill = new JobOfferSkill();
         JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
@@ -135,7 +137,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void addManuallyMatchInvalidJobOffer() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException {
+    void addManuallyMatchInvalidJobOffer() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException,  AlreadyMatched {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -145,6 +147,7 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        applicant.setMatches(new ArrayList<Match>());
         ApplicantSkill applicantSkill = new ApplicantSkill();
         JobOfferSkill jobOfferSkill = new JobOfferSkill();
         JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
@@ -184,7 +187,7 @@ class MatchServiceImplTest {
     }
 
     @Test
-    void addManuallyMatchJobOfferInactive() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException {
+    void addManuallyMatchJobOfferInactive() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException, AlreadyMatched {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -194,6 +197,7 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        applicant.setMatches(new ArrayList<Match>());
         ApplicantSkill applicantSkill = new ApplicantSkill();
         JobOfferSkill jobOfferSkill = new JobOfferSkill();
         JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
@@ -234,7 +238,7 @@ class MatchServiceImplTest {
 
 
     @Test
-    void addManuallyMatchApplicantInactive() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException {
+    void addManuallyMatchApplicantInactive() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException,  AlreadyMatched {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -244,6 +248,7 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        applicant.setMatches(new ArrayList<Match>());
         ApplicantSkill applicantSkill = new ApplicantSkill();
         JobOfferSkill jobOfferSkill = new JobOfferSkill();
         JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
@@ -284,7 +289,7 @@ class MatchServiceImplTest {
 
 
     @Test
-    void addPartiallyMatch() throws JobOfferNotFoundException, JobOfferAlreadyClosed, InterruptedException {
+    void addPartiallyMatch() throws JobOfferNotFoundException, JobOfferAlreadyClosed {
 
         Applicant applicant1 = new Applicant();
         applicant1.setId(1);
@@ -358,8 +363,6 @@ class MatchServiceImplTest {
 
 
         List<Match> autoMatch = matchServiceImpl.addPartiallyMatch(1);
-        System.out.println("first applicant matched " +autoMatch.get(0).getMatchPercentage() + "2nd appl matched" + autoMatch.get(1).getMatchPercentage());
-        Thread.sleep(20000);
         assertEquals(2, autoMatch.size());
 
     }

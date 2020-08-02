@@ -36,7 +36,7 @@ public interface MatchService {
      * @throws ApplicantAlreadyClosed
      */
     Match addManuallyMatch(long jobOfferId,long applicantId )
-            throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed;
+            throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed, AlreadyMatched;
 
     /**
      * Matches all the applicants that have at least all jobOffer skills
@@ -70,7 +70,7 @@ public interface MatchService {
 
     /**
      * Deletes a manual match from match table
-     * @param matchIndex
+     * @param matchId
      * @return {@code true on success}
      */
      boolean deleteMatch(long matchId) ;

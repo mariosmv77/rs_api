@@ -75,4 +75,12 @@ public interface ApplicantService {
      * @throws InvalidFormatException
      */
     List<Applicant> readApplicants() throws IOException, InvalidFormatException;
+
+
+    /**
+     * @param skillId
+     * @return All Applicants with this skill
+     * @throws SkillNotFoundException
+     */
+    List <Applicant> getApplicantsBySkill(Long skillId) throws SkillNotFoundException;
 }

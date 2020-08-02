@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,13 @@ public class    ApplicantController {
     public Applicant getApplicant(@PathVariable long id) throws ApplicantNotFoundException {
         log.info("\nGET REQUEST: Calling getApplicant method(by Id) ");
         return applicantService.getApplicant(id);
+    }
+    @GetMapping("selectedApplicantsBySkill")
+    public List<Applicant> getApplicantsBySkill(
+            @RequestParam(required = false) Long skill)
+            throws SkillNotFoundException {
+        log.info("\nGET REQUEST: Calling getApplicantsBySkill method ");
+        return applicantService.getApplicantsBySkill(skill);
     }
 
     @PostMapping("applicant")

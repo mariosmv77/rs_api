@@ -135,7 +135,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Match addManuallyMatch(long jobOfferId, long applicantId)
-            throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
+            throws ApplicantNotFoundException, JobOfferNotFoundException, JobOfferAlreadyClosed, ApplicantAlreadyClosed, AlreadyMatched {
         log.info("\nEnter addManuallyMatch method ");
 
         JobOffer jobOfferInDb = jobOfferRepo.findById(jobOfferId)
@@ -150,6 +150,12 @@ public class MatchServiceImpl implements MatchService {
         }
         if (applicantInDb.isInactive()) {
             throw new ApplicantAlreadyClosed("Applicant is already closed");
+        }
+        List<Match> appamtches = applicantInDb.getMatches();
+        for(Match appmatch:appamtches){
+            if (appmatch.getJobOffer()==jobOfferInDb){
+                throw new AlreadyMatched("this applicant is already matched with this jobOffer");
+            }
         }
         int skillCounter = 0;
         Match newMatch = new Match();

@@ -38,7 +38,7 @@ public class MatcherEngineController {
     }
 
     @PostMapping("match/{jobOfferId}/{applicantId}")
-    public Match addManuallyMatch(@PathVariable long jobOfferId, @PathVariable long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException, ApplicantNotFoundException, ApplicantAlreadyClosed, JobOfferAlreadyClosed {
+    public Match addManuallyMatch(@PathVariable long jobOfferId, @PathVariable long applicantId) throws ApplicantNotFoundException, JobOfferNotFoundException, ApplicantNotFoundException, ApplicantAlreadyClosed, JobOfferAlreadyClosed, AlreadyMatched {
         log.info("\nPOST REQUEST: Calling addManuallyMatch method ");
         return matchService.addManuallyMatch(jobOfferId, applicantId);
     }

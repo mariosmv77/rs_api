@@ -1,9 +1,7 @@
 package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.exception.*;
-import gr.codehub.rsapi.model.Applicant;
-import gr.codehub.rsapi.model.ApplicantSkill;
-import gr.codehub.rsapi.model.Skill;
+import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.ApplicantSkillRepo;
 import gr.codehub.rsapi.repository.SkillRepo;
@@ -15,6 +13,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +116,26 @@ public class ApplicantServiceImpl implements ApplicantService {
         log.info("\nStart ReadApplicants From Excel File");
         log.info("\nExits ReadApplicants From Excel File after successfully read it");
         return FileReaderToList.readFromExcelApplicant("data.xlsx", applicantRepo, skillRepo, applicantSkillRepo);
+    }
+
+    @Override
+    public List<Applicant> getApplicantsBySkill(Long skillId) throws SkillNotFoundException {
+        Skill skill = skillRepo.findById(skillId).orElseThrow(() -> new
+                SkillNotFoundException("Cannot find Skill"));
+        List<Applicant> applicants = applicantRepo.findAll();
+        List<Applicant> tempApplicants = new ArrayList<Applicant>();
+        if (skillId != null) {
+            for (Applicant applicant : applicants) {
+                List<ApplicantSkill> applicantSkills = applicant.getApplicantSkills();
+                for (ApplicantSkill applicantSkill : applicantSkills) {
+                    if (applicantSkill.getSkill() == skill) {
+                        tempApplicants.add(applicant);
+                    }
+                }
+            }
+            log.info("\nExits getSelectedApplicants method, after returning jobOffers by jobOfferSkillId" );
+        }
+        return tempApplicants;
     }
 
     @Override
