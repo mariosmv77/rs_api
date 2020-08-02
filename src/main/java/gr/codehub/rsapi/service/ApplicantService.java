@@ -6,10 +6,7 @@ import gr.codehub.rsapi.model.ApplicantSkill;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.List;
-
 
 /**
  * Implements all the REST verbs for the entity applicant
@@ -17,7 +14,6 @@ import java.util.List;
 public interface ApplicantService {
     /**
      * Required request parameters for the Applicant entity
-     *
      * @param firstName
      * @param lastName
      * @param address
@@ -48,12 +44,12 @@ public interface ApplicantService {
 
     /**
      * This method change the value of field isClosed to true
-     * @param applicantIndex
+     * @param applicantId
      * @return
      * @throws ApplicantNotFoundException
      * @throws ApplicantAlreadyClosed
      */
-    Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed;
+    Applicant deleteApplicant(long applicantId) throws ApplicantNotFoundException, ApplicantAlreadyClosed;
 
     /**
      * @param applicantId

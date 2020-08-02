@@ -22,7 +22,6 @@ public interface SkillService {
     Skill addSkill(Skill skill);
 
     /**
-     *
      * Updated the skill with the specified ID
      * @param skill
      * @param skillId
@@ -40,10 +39,9 @@ public interface SkillService {
     List<Skill> readSkills() throws IOException,InvalidFormatException;
 
     /**
-     *
-     * @param skillIndex
+     * @param skillId
      * @return {@code true on success}
      * @throws SkillNotFoundException
      */
-    boolean deleteSkill(long skillIndex) throws SkillNotFoundException;
+    boolean deleteSkill(long skillId) throws SkillNotFoundException;
 }

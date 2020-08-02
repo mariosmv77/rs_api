@@ -22,6 +22,4 @@ public class JobOfferSkill {
 
     @ManyToOne
     private Skill skill;
-
-
 }

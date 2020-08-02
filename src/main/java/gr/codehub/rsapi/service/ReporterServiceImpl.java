@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-
 public class ReporterServiceImpl implements ReporterService {
 
     private JobOfferRepo jobOfferRepo;
@@ -55,7 +54,6 @@ public class ReporterServiceImpl implements ReporterService {
         log.info("\nEnter getRecentFinalizedMatch method");
         log.info("\nExits getRecentFinalizedMatch method after " +
                 " returning most recent finalized matches");
-
         return matchRepo.getRecentFinalizedMatch();
     }
 
@@ -76,6 +74,9 @@ public class ReporterServiceImpl implements ReporterService {
 
     @Override
     public List<SurveyWeek> getByWeek() {
+        log.info("\nEnter getByWeek method");
+        log.info("\nExits getByWeek method after " +
+                "providing report about finalized matches by week");
         return matchRepo.getByWeek();
     }
 
@@ -84,7 +85,5 @@ public class ReporterServiceImpl implements ReporterService {
         log.info("\nExits getNotMatchSkills method after " +
                 "providing report about the skills that Applicants dont have, but Job offers require");
         return matchRepo.getNotMatchedSkills();
-
-
     }
 }

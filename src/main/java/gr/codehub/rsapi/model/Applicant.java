@@ -6,10 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
 
 @Data
 @NoArgsConstructor
@@ -28,45 +26,42 @@ public class Applicant {
     private Date dob;
     private boolean inactive;
 
-
-
-
     /**
      *Fluent API in order to read properly the xls file
-     *because the annotations initialize 0 parameter setters and getters
+     *because from @Data annotations initialize 0 parameter setters and getters (void)
      */
-    public Applicant setfnamecustom(String fName) {
+    public Applicant setFirstNameCustom(String fName) {
         this.firstName = fName;
         return  this;
     }
 
-    public Applicant  setlNameCustom(String lName) {
+    public Applicant  setLastNameCustom(String lName) {
         this.lastName = lName;
         return this;
     }
 
-    public Applicant setAddressCust(String address) {
+    public Applicant setAddressCustom(String address) {
         this.address = address;
         return this;
     }
 
-    public Applicant setRegionCust(String region) {
+    public Applicant setRegionCustom(String region) {
         this.region = region;
         return this;
     }
 
-    public Applicant setEmailCust(String email) {
+    public Applicant setEmailCustom(String email) {
         this.email = email;
         return this;
     }
-    public Applicant setDobCust(Date dob) {
+    public Applicant setDobCustom(Date dob) {
         this.dob = dob;
         return this;
     }
+
     @OneToMany(mappedBy = "applicant")
     private List<ApplicantSkill> applicantSkills;
 
     @OneToMany(mappedBy = "applicant")
     private List<Match> matches;
-
 }

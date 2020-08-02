@@ -8,11 +8,9 @@ import gr.codehub.rsapi.model.JobOffer;
 import gr.codehub.rsapi.model.JobOfferSkill;
 import gr.codehub.rsapi.service.JobOfferService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 @RestController
@@ -24,8 +22,7 @@ public class JobOfferController {
         this.jobOfferService = jobOfferService;
     }
 
-    //Job offer
-    @PostMapping("jobOfferSkill/{jobOfferId}/skill/{skillId}")
+    @PostMapping("jobOffer/{jobOfferId}/skill/{skillId}")
     public JobOfferSkill addSkillToJobOffer(@PathVariable long jobOfferId, @PathVariable long skillId) throws JobOfferNotFoundException, SkillNotFoundException {
         log.info("\n POST REQUEST: Calling addSkillToJobOffer method");
         return jobOfferService.addSkillToJobOffer(jobOfferId, skillId);
@@ -49,7 +46,7 @@ public class JobOfferController {
         return jobOfferService.getJobOffer(id);
     }
 
-    @GetMapping("selectedjobOffer")
+    @GetMapping("selectedJobOffer")
     public List<JobOffer> getJobOfferByCriteria(
             @RequestParam(required = false) String offerDate,
             @RequestParam(required = false) String region,
@@ -61,20 +58,15 @@ public class JobOfferController {
                 name, jobOfferSkill);
     }
 
-    @DeleteMapping("joboffer/{id}")
+    @DeleteMapping("jobOffer/{id}")
     public JobOffer deleteJobOffer(long id) throws JobOfferNotFoundException, JobOfferAlreadyClosed {
         log.info("\nDELETE REQUEST: Calling deleteJobOffer");
         return jobOfferService.deleteJobOffer(id);
     }
 
-    @PutMapping("joboffer/{id}")
+    @PutMapping("jobOffer/{id}")
     public JobOffer updateJobOffer(@RequestBody JobOffer jobOffer, long id) throws JobOfferNotFoundException {
         log.info("\nPUT REQUEST: Calling updateJobOffer method");
         return jobOfferService.updateJobOffer(jobOffer, id);
-    }
-    @GetMapping("jobOfferRead")
-    public List<JobOffer> readJobOffers() throws IOException, InvalidFormatException {
-        log.info("\nGET REQUEST: Calling readJobOffers From Excel File");
-        return jobOfferService.readJobOffers();
     }
 }

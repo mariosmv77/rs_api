@@ -7,19 +7,11 @@ import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.MatchRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
-
 
 @Service
 @Slf4j
@@ -123,7 +115,6 @@ public class MatchServiceImpl implements MatchService {
             }
         }
         log.info("\nExits addAutomaticMatch method and add a match for jobOfferId : " + jobOfferId);
-
         return matchesTemp;
     }
 
@@ -156,17 +147,16 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean deleteMatch(long matchIndex) {
+    public boolean deleteMatch(long matchId) {
         log.info("\nEnter deleteMatch method");
         log.info("\nExits deleteMatch method, after deleting a manual match");
-        matchRepo.deleteById(matchIndex);
+        matchRepo.deleteById(matchId);
         return true;
     }
 
     @Override
     public Match getMatch(long matchId) throws MatchNotFoundException {
         log.info("\nEnter getMatch method ");
-
         Optional<Match> oMatch =
                 matchRepo.findById(matchId);
         if (oMatch.isPresent()) {
@@ -179,7 +169,6 @@ public class MatchServiceImpl implements MatchService {
     public boolean finalizeMatch(long matchId)
             throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         log.info("\nEnter finalizeMatch method ");
-
         Match match;
         Optional<Match> optionalMatch = matchRepo.findById(matchId);
         if (optionalMatch.isPresent()) {
@@ -188,7 +177,6 @@ public class MatchServiceImpl implements MatchService {
                 if (match.getJobOffer().isInactive()) {
                     throw new JobOfferAlreadyClosed("Job is already closed");
                 }
-
                 if (match.getApplicant().isInactive()) {
                     throw new ApplicantAlreadyClosed("Applicant is already closed");
                 }
@@ -198,12 +186,9 @@ public class MatchServiceImpl implements MatchService {
                 match.getJobOffer().setInactive(true);
                 matchRepo.save(match);
                 log.info("\nExits finalizeMatch method, after finalizing a match with match Id: " + matchId);
-
                 return true;
             } else
                 throw new MatchAlreadyFinalized("Match is already finalized");
         } else throw new MatchNotFoundException("Match not found");
     }
-
-
 }

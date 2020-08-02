@@ -49,7 +49,6 @@ public interface MatchService {
     List <Match> addAutomaticMatch(long jobOfferId)
             throws JobOfferNotFoundException, JobOfferAlreadyClosed;
 
-
     /**
      * Gets a specific match from the match table (by iD)
      * @param matchId
@@ -74,6 +73,6 @@ public interface MatchService {
      * @param matchIndex
      * @return {@code true on success}
      */
-     boolean deleteMatch(long matchIndex) ;
+     boolean deleteMatch(long matchId) ;
 
 }

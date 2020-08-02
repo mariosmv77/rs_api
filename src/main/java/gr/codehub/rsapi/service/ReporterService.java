@@ -1,13 +1,10 @@
 package gr.codehub.rsapi.service;
 
 import gr.codehub.rsapi.model.Match;
-import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.utility.SurveyMonth;
 import gr.codehub.rsapi.utility.SurveyNotMatchSkill;
 import gr.codehub.rsapi.utility.SurveySkills;
 import gr.codehub.rsapi.utility.SurveyWeek;
-
-import java.util.HashSet;
 import java.util.List;
 
 public interface ReporterService {
@@ -45,7 +42,6 @@ public interface ReporterService {
     List<SurveyNotMatchSkill> getNotMatchedSkills();
 
     /**
-     *
      * Finds all matches ordered by week
      * week = the n week of the year
      * @return {@code  List<SurveyStatistics>}
@@ -53,7 +49,6 @@ public interface ReporterService {
     List<SurveyWeek> getByWeek();
 
     /**
-     *
      * Finds all matches ordered by month
      * @return {@code  List<SurveyStatistics>}
      */

@@ -1,6 +1,5 @@
 package gr.codehub.rsapi.utility;
 
-
 import gr.codehub.rsapi.model.*;
 import gr.codehub.rsapi.repository.*;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -42,15 +41,14 @@ public class FileReaderToList {
             }
             Applicant tempApplicant = new Applicant();
             applicants.add(tempApplicant
-                    .setfnamecustom(row.getCell(0).getStringCellValue())
-                    .setlNameCustom(row.getCell(1).getStringCellValue())
-                    .setAddressCust(row.getCell(2).getStringCellValue())
-                    .setRegionCust(row.getCell(3).getStringCellValue())
-                    .setEmailCust(row.getCell(4).getStringCellValue())
-                    .setDobCust(row.getCell(5).getDateCellValue()));
+                    .setFirstNameCustom(row.getCell(0).getStringCellValue())
+                    .setLastNameCustom(row.getCell(1).getStringCellValue())
+                    .setAddressCustom(row.getCell(2).getStringCellValue())
+                    .setRegionCustom(row.getCell(3).getStringCellValue())
+                    .setEmailCustom(row.getCell(4).getStringCellValue())
+                    .setDobCustom(row.getCell(5).getDateCellValue()));
             tempApplicant.setApplicantSkills(new ArrayList<ApplicantSkill>());
             tempApplicant = applicantRepository.save(tempApplicant);
-
             List<Skill> skills = skillRepo.findAll();
 
             for (int i = 7; i<cellNumbers; i++) {
@@ -64,11 +62,8 @@ public class FileReaderToList {
                    }
                }
             }
-
             applicantRepository.saveAll(applicants);
-
         }
-        // Closing the workbook
         workbook.close();
         return applicants;
     }
@@ -98,14 +93,12 @@ public class FileReaderToList {
             }
             JobOffer tempJobOffer = new JobOffer();
             jobOffers.add(tempJobOffer
-                    .setCompanyCust(row.getCell(0).getStringCellValue())
-                    .setTitleCust(row.getCell(1).getStringCellValue())
-                    .setRegionCust(row.getCell(2).getStringCellValue())
-                    .setOfferDatecust(row.getCell(3).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
-
+                    .setCompanyCustom(row.getCell(0).getStringCellValue())
+                    .setTitleCustom(row.getCell(1).getStringCellValue())
+                    .setRegionCustom(row.getCell(2).getStringCellValue())
+                    .setOfferDateCustom(row.getCell(3).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
             tempJobOffer.setJobOfferSkills(new ArrayList<>());
             tempJobOffer =jobOfferRepository.save(tempJobOffer);
-
             List<Skill> skills = skillRepo.findAll();
 
             for (int i = 5; i<cellNumbers; i++) {
@@ -119,10 +112,8 @@ public class FileReaderToList {
                     }
                 }
             }
-
             jobOfferRepository.saveAll(jobOffers);
         }
-        // Closing the workbook
         workbook.close();
         return jobOffers;
     }
@@ -152,7 +143,6 @@ public class FileReaderToList {
                     .setLevels(row.getCell(1).getStringCellValue()));
             skillRepository.saveAll(skills);
         }
-        // Closing the workbook
         workbook.close();
         return skills;
     }

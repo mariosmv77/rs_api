@@ -41,5 +41,4 @@ public class Skill {
     @OneToMany(mappedBy = "skill")
     @JsonIgnore
     private List<JobOfferSkill> jobOfferSkills;
-
 }

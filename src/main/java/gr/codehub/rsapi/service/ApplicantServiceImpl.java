@@ -3,7 +3,6 @@ package gr.codehub.rsapi.service;
 import gr.codehub.rsapi.exception.*;
 import gr.codehub.rsapi.model.Applicant;
 import gr.codehub.rsapi.model.ApplicantSkill;
-import gr.codehub.rsapi.model.JobOffer;
 import gr.codehub.rsapi.model.Skill;
 import gr.codehub.rsapi.repository.ApplicantRepo;
 import gr.codehub.rsapi.repository.ApplicantSkillRepo;
@@ -15,15 +14,8 @@ import gr.codehub.rsapi.utility.FileReaderToList;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +33,10 @@ public class ApplicantServiceImpl implements ApplicantService {
         this.applicantRepo = applicantRepo;
         this.applicantSkillRepo = applicantSkillRepo;
         this.skillRepo = skillRepo;
-
     }
 
-
     @Override
-    public List<Applicant> getApplicants(String firstName, String lastName, String address, String region,
-                                         String email) {
-
+    public List<Applicant> getApplicants(String firstName, String lastName, String address, String region, String email) {
         log.info("\nEnter getApplicants method");
         ApplicantSpecification msTitleRating = new ApplicantSpecification();
         if (firstName != null) msTitleRating.add(new SearchCriteria("firstName", firstName, SearchOperation.MATCH));
@@ -57,7 +45,6 @@ public class ApplicantServiceImpl implements ApplicantService {
         if (region != null) msTitleRating.add(new SearchCriteria("region", region, SearchOperation.MATCH));
         if (email != null) msTitleRating.add(new SearchCriteria("email", email, SearchOperation.MATCH));
         List<Applicant> msTitleRatingList = applicantRepo.findAll(msTitleRating);
-
         log.info("\nExits getApplicants method and returns all applicants or by specific criteria");
         return msTitleRatingList;
     }
@@ -77,7 +64,6 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public Applicant updateApplicant(Applicant applicant, long applicantId) throws ApplicantNotFoundException {
         log.info("\nEnter updateApplicant method");
-
         Applicant applicantInDb;
         Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantId);
         if (optionalApplicant.isPresent()) {
@@ -95,28 +81,25 @@ public class ApplicantServiceImpl implements ApplicantService {
             if (applicant.getDob() != null)
                 applicantInDb.setDob(applicant.getDob());
             applicantRepo.save(applicantInDb);
-
             log.info("\nExits updateApplicant, after update an applicant with ApplicantId : " + applicantId);
             return applicantInDb;
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
     @Override
-    public Applicant deleteApplicant(long applicantIndex) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
+    public Applicant deleteApplicant(long applicantId) throws ApplicantNotFoundException, ApplicantAlreadyClosed {
         log.info("\nEnter deleteApplicant");
-
         Applicant applicantInDb;
-        Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantIndex);
+        Optional<Applicant> optionalApplicant = applicantRepo.findById(applicantId);
         if (optionalApplicant.isPresent()) {
             applicantInDb = optionalApplicant.get();
             if (applicantInDb.isInactive()) {
                 throw new ApplicantAlreadyClosed("applicant already closed");
             }
             applicantInDb.setInactive(true);
-            log.info("\nExits deleteApplicant,after changing an Applicant from being available with the index: " + applicantIndex);
+            log.info("\nExits deleteApplicant,after changing an Applicant from being available with the index: " + applicantId);
             return applicantRepo.save(applicantInDb);
         } else throw new ApplicantNotFoundException("not such applicant exists");
-
     }
 
     @Override
@@ -129,14 +112,12 @@ public class ApplicantServiceImpl implements ApplicantService {
         } else throw new ApplicantNotFoundException("not such applicant exists");
     }
 
-
     @Override
     public List<Applicant> readApplicants() throws IOException, InvalidFormatException {
         log.info("\nStart ReadApplicants From Excel File");
         log.info("\nExits ReadApplicants From Excel File after successfully read it");
         return FileReaderToList.readFromExcelApplicant("data.xlsx", applicantRepo, skillRepo, applicantSkillRepo);
     }
-
 
     @Override
     public ApplicantSkill addSkillToApplicant(long applicantId, long skillId)
@@ -145,15 +126,12 @@ public class ApplicantServiceImpl implements ApplicantService {
         Applicant applicant = applicantRepo.findById(applicantId)
                 .orElseThrow(() -> new
                         ApplicantNotFoundException("Cannot find applicant"));
-
         Skill skill = skillRepo.findById(skillId).orElseThrow(() -> new
                 SkillNotFoundException("Cannot find Skill"));
-
         ApplicantSkill applicantSkill = new ApplicantSkill();
         applicantSkill.setApplicant(applicant);
         applicantSkill.setSkill(skill);
         applicantSkillRepo.save(applicantSkill);
-
         log.info("\nExits addSkillToApplicant method, after adding skills to applicant with applicantId: " +
                 applicantId + " and skill id: " + skillId);
         return applicantSkill;

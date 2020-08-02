@@ -14,12 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @Slf4j
 public class ReporterController {
-
     private ReporterService reporterService;
 
     @Autowired
@@ -30,49 +27,42 @@ public class ReporterController {
     @GetMapping("proposalMatches")
     public List<Match> getProposalMatches() {
         log.info("\nGET REQUEST: Calling getProposalMatches");
-
         return reporterService.getMatches();
     }
 
     @GetMapping("mostOfferedSkills")
     public List<SurveySkills> getMostOfferedSkills() {
         log.info("\nGET REQUEST: Calling getMostOfferedSkills");
-
         return reporterService.getMostPopularOfferedSkills();
     }
 
     @GetMapping("mostRequestedSkills")
     public List<SurveySkills> getMostRequestedSkills() {
         log.info("\nGET REQUEST: Calling getMostRequestedSkills");
-
         return reporterService.getMostPopularRequestedSkills();
     }
 
     @GetMapping("recentFinalized")
     private List<Match> getRecentFinalizedMatch() {
         log.info("\nGET REQUEST: Calling getRecentFinalizedMatch");
-
         return reporterService.getRecentFinalizedMatch();
     }
 
     @GetMapping("notMatched")
     public List<SurveyNotMatchSkill> getNotMatchedSkills() {
         log.info("\nGET REQUEST: Calling getNotMatchedSkills");
-
         return reporterService.getNotMatchedSkills();
     }
 
     @GetMapping("matchByMonth")
     public List<SurveyMonth> getByMonth() {
         log.info("\nGET REQUEST: Calling getByMonth");
-
         return reporterService.getByMonth();
     }
 
     @GetMapping("matchByWeek")
     public List<SurveyWeek> getByWeek() {
         log.info("\nGET REQUEST: Calling getByWeek");
-
         return reporterService.getByWeek();
     }
 }

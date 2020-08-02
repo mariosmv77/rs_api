@@ -13,14 +13,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-
 public class SkillServiceImpl implements SkillService {
-
-
     private SkillRepo skillRepo;
 
     @Autowired
@@ -35,7 +31,6 @@ public class SkillServiceImpl implements SkillService {
         return skillRepo.findAll();
     }
 
-
     @Override
     public Skill addSkill(Skill skill) {
         log.info("\nEnter addSkill method");
@@ -46,7 +41,6 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public Skill updateSkill(Skill skill, long skillId) throws SkillNotFoundException {
         log.info("\nEnter updateApplicant method");
-
         Skill skillInDb;
         Optional<Skill> optionalSkill = skillRepo.findById(skillId);
         if(optionalSkill.isPresent()){
@@ -58,19 +52,16 @@ public class SkillServiceImpl implements SkillService {
             log.info("\nExits updateApplicant, after update a skill with SkillId : " + skillId);
             return skillInDb;
         }else throw new SkillNotFoundException("not such skill exists");
-
     }
 
     @Override
-    public boolean deleteSkill(long skillIndex) throws SkillNotFoundException {
+    public boolean deleteSkill(long skillId) throws SkillNotFoundException {
         log.info("\nEnter deleteSkill");
-        Optional<Skill> optionalSkill = skillRepo.findById(skillIndex);
+        Optional<Skill> optionalSkill = skillRepo.findById(skillId);
         if (optionalSkill.isPresent()) {
-            skillRepo.deleteById(skillIndex);
-            log.info("\nExits deleteSkill,after deleting skill with the index: " + skillIndex);
-
+            skillRepo.deleteById(skillId);
+            log.info("\nExits deleteSkill,after deleting skill with the index: " + skillId);
             return true;
-
         }
         else throw new SkillNotFoundException("not such skill exists");
     }

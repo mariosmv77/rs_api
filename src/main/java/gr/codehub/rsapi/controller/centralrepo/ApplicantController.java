@@ -21,12 +21,8 @@ public class ApplicantController {
 @Autowired
     public ApplicantController(ApplicantService applicantService) {
         this.applicantService = applicantService;
-
     }
 
-
-
-    //Applicant EndPoints
     @GetMapping("applicant")
     public List<Applicant> getApplicants(@RequestParam(required = false) String firstName,
                                          @RequestParam(required = false) String lastName,
@@ -61,16 +57,9 @@ public class ApplicantController {
         return applicantService.deleteApplicant(id);
     }
 
-
     @PostMapping("applicant/{applicantId}/skill/{skillId}")
     public ApplicantSkill addApplicantSkill(@PathVariable long applicantId, @PathVariable long skillId) throws ApplicantNotFoundException, SkillNotFoundException {
         log.info("\n POST REQUEST: Calling addSkillToApplicant method");
         return applicantService.addSkillToApplicant(applicantId, skillId);
     }
-    @GetMapping("applicantRead")
-    public List<Applicant> readApplicants() throws IOException, InvalidFormatException {
-        log.info("\nGET REQUEST: Calling readApplicants From Excel File");
-        return applicantService.readApplicants();
-    }
-
 }
