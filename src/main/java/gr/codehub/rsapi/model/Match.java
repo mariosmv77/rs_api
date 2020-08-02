@@ -27,6 +27,7 @@ public class Match {
     }
 
     private type Type;
+    private String matchPercentage;
     private boolean isFinalized;
 
     @ManyToOne

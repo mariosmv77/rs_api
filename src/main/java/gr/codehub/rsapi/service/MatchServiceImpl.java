@@ -21,6 +21,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 
+
 @Service
 @Slf4j
 public class MatchServiceImpl implements MatchService {
@@ -58,6 +59,7 @@ public class MatchServiceImpl implements MatchService {
         }
         List<Applicant> applicants = applicantRepo.findAll();
         for (Applicant applicant : applicants) {
+            int skillCounter = 0;
             boolean alreadyMatched = false;
             Match newMatch = new Match();
             List<Skill> appskills = new ArrayList<Skill>();
@@ -73,14 +75,17 @@ public class MatchServiceImpl implements MatchService {
             if (!applicant.isInactive() && !alreadyMatched && !(appskills.containsAll(jobskills))) {
                 for (Skill skill : appskills) {
                     if (jobskills.contains(skill)) {
-                        newMatch.setJobOffer(jobOfferInDb);
-                        newMatch.setApplicant(applicant);
-                        newMatch.setType(Match.type.PARTIAL);
-                        matchesTemp.add(newMatch);
-                        matchRepo.save(newMatch);
-                        break;
+                        skillCounter ++;
+
                     }
                 }
+            }if(skillCounter>0){
+                newMatch.setJobOffer(jobOfferInDb);
+                newMatch.setApplicant(applicant);
+                newMatch.setType(Match.type.PARTIAL);
+                newMatch.setMatchPercentage(Math.round(((double)skillCounter/jobskills.size())*100.0) + "%");
+                matchesTemp.add(newMatch);
+                matchRepo.save(newMatch);
             }
         }
         log.info("\nExits addPartiallyMatch method and add a match for jobOfferId : " + jobOfferId);
@@ -118,6 +123,7 @@ public class MatchServiceImpl implements MatchService {
                 newMatch.setJobOffer(jobOfferInDb);
                 newMatch.setApplicant(applicant);
                 newMatch.setType(Match.type.AUTO);
+                newMatch.setMatchPercentage("100%");
                 matchesTemp.add(newMatch);
                 matchRepo.save(newMatch);
             }
@@ -145,10 +151,20 @@ public class MatchServiceImpl implements MatchService {
         if (applicantInDb.isInactive()) {
             throw new ApplicantAlreadyClosed("Applicant is already closed");
         }
+        int skillCounter = 0;
         Match newMatch = new Match();
         newMatch.setApplicant(applicantInDb);
         newMatch.setJobOffer(jobOfferInDb);
         newMatch.setType(Match.type.MANUAL);
+        for(JobOfferSkill jobOfferSkill: jobOfferInDb.getJobOfferSkills()){
+        for(ApplicantSkill applicantSkill: applicantInDb.getApplicantSkills()){
+            if (applicantSkill.getSkill() == jobOfferSkill.getSkill()){
+                    skillCounter ++;
+                    break;
+                }
+            }
+        }
+        newMatch.setMatchPercentage(Math.round(((double)skillCounter/jobOfferInDb.getJobOfferSkills().size())*100.0) + "%");
         matchRepo.save(newMatch);
         log.info("\nExits addManuallyMatch method and add a match for jobOfferId : " + jobOfferId +
                 " for the applicant with id: " + applicantId);
