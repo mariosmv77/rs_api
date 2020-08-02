@@ -7,11 +7,20 @@ import gr.codehub.rsapi.repository.JobOfferRepo;
 import gr.codehub.rsapi.repository.MatchRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @Service
 @Slf4j
@@ -50,6 +59,7 @@ public class MatchServiceImpl implements MatchService {
         }
         List<Applicant> applicants = applicantRepo.findAll();
         for (Applicant applicant : applicants) {
+            int skillCounter = 0;
             boolean alreadyMatched = false;
             Match newMatch = new Match();
             List<Skill> appskills = new ArrayList<Skill>();
@@ -65,14 +75,17 @@ public class MatchServiceImpl implements MatchService {
             if (!applicant.isInactive() && !alreadyMatched && !(appskills.containsAll(jobskills))) {
                 for (Skill skill : appskills) {
                     if (jobskills.contains(skill)) {
-                        newMatch.setJobOffer(jobOfferInDb);
-                        newMatch.setApplicant(applicant);
-                        newMatch.setType(Match.type.PARTIAL);
-                        matchesTemp.add(newMatch);
-                        matchRepo.save(newMatch);
-                        break;
+                        skillCounter ++;
+
                     }
                 }
+            }if(skillCounter>0){
+                newMatch.setJobOffer(jobOfferInDb);
+                newMatch.setApplicant(applicant);
+                newMatch.setType(Match.type.PARTIAL);
+                newMatch.setMatchPercentage(Math.round(((double)skillCounter/jobskills.size())*100.0) + "%");
+                matchesTemp.add(newMatch);
+                matchRepo.save(newMatch);
             }
         }
         log.info("\nExits addPartiallyMatch method and add a match for jobOfferId : " + jobOfferId);
@@ -110,11 +123,13 @@ public class MatchServiceImpl implements MatchService {
                 newMatch.setJobOffer(jobOfferInDb);
                 newMatch.setApplicant(applicant);
                 newMatch.setType(Match.type.AUTO);
+                newMatch.setMatchPercentage("100%");
                 matchesTemp.add(newMatch);
                 matchRepo.save(newMatch);
             }
         }
         log.info("\nExits addAutomaticMatch method and add a match for jobOfferId : " + jobOfferId);
+
         return matchesTemp;
     }
 
@@ -136,10 +151,20 @@ public class MatchServiceImpl implements MatchService {
         if (applicantInDb.isInactive()) {
             throw new ApplicantAlreadyClosed("Applicant is already closed");
         }
+        int skillCounter = 0;
         Match newMatch = new Match();
         newMatch.setApplicant(applicantInDb);
         newMatch.setJobOffer(jobOfferInDb);
         newMatch.setType(Match.type.MANUAL);
+        for(JobOfferSkill jobOfferSkill: jobOfferInDb.getJobOfferSkills()){
+        for(ApplicantSkill applicantSkill: applicantInDb.getApplicantSkills()){
+            if (applicantSkill.getSkill() == jobOfferSkill.getSkill()){
+                    skillCounter ++;
+                    break;
+                }
+            }
+        }
+        newMatch.setMatchPercentage(Math.round(((double)skillCounter/jobOfferInDb.getJobOfferSkills().size())*100.0) + "%");
         matchRepo.save(newMatch);
         log.info("\nExits addManuallyMatch method and add a match for jobOfferId : " + jobOfferId +
                 " for the applicant with id: " + applicantId);
@@ -147,16 +172,17 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean deleteMatch(long matchId) {
+    public boolean deleteMatch(long matchIndex) {
         log.info("\nEnter deleteMatch method");
         log.info("\nExits deleteMatch method, after deleting a manual match");
-        matchRepo.deleteById(matchId);
+        matchRepo.deleteById(matchIndex);
         return true;
     }
 
     @Override
     public Match getMatch(long matchId) throws MatchNotFoundException {
         log.info("\nEnter getMatch method ");
+
         Optional<Match> oMatch =
                 matchRepo.findById(matchId);
         if (oMatch.isPresent()) {
@@ -169,6 +195,7 @@ public class MatchServiceImpl implements MatchService {
     public boolean finalizeMatch(long matchId)
             throws MatchNotFoundException, MatchAlreadyFinalized, JobOfferAlreadyClosed, ApplicantAlreadyClosed {
         log.info("\nEnter finalizeMatch method ");
+
         Match match;
         Optional<Match> optionalMatch = matchRepo.findById(matchId);
         if (optionalMatch.isPresent()) {
@@ -177,6 +204,7 @@ public class MatchServiceImpl implements MatchService {
                 if (match.getJobOffer().isInactive()) {
                     throw new JobOfferAlreadyClosed("Job is already closed");
                 }
+
                 if (match.getApplicant().isInactive()) {
                     throw new ApplicantAlreadyClosed("Applicant is already closed");
                 }
@@ -186,9 +214,12 @@ public class MatchServiceImpl implements MatchService {
                 match.getJobOffer().setInactive(true);
                 matchRepo.save(match);
                 log.info("\nExits finalizeMatch method, after finalizing a match with match Id: " + matchId);
+
                 return true;
             } else
                 throw new MatchAlreadyFinalized("Match is already finalized");
         } else throw new MatchNotFoundException("Match not found");
     }
+
+
 }

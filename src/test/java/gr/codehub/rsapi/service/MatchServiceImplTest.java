@@ -34,7 +34,7 @@ class MatchServiceImplTest {
 
 
     @Test
-    void addManuallyMatch() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException {
+    void addManuallyMatch() throws JobOfferAlreadyClosed, ApplicantAlreadyClosed, JobOfferNotFoundException, ApplicantNotFoundException, InterruptedException {
         Applicant applicant = new Applicant();
         applicant.setId(1);
         applicant.setFirstName("Maria");
@@ -44,8 +44,30 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        ApplicantSkill applicantSkill = new ApplicantSkill();
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill3 = new JobOfferSkill();
+        Skill skill1 = new Skill();
+        skill1.setId(1);
+        Skill skill2 = new Skill();
+        skill2.setId(2);
+        Skill skill3 = new Skill();
+        skill3.setId(3);
+        applicantSkill.setSkill(skill1);
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
+        applicantSkills.add(applicantSkill);
+        applicant.setApplicantSkills(applicantSkills);
+        jobOfferSkill.setSkill(skill1);
+        jobOfferSkill12.setSkill(skill2);
+        jobOfferSkill3.setSkill(skill3);
+        List<JobOfferSkill> jobOfferSkills = new ArrayList<>();
+        jobOfferSkills.add(jobOfferSkill);
+        jobOfferSkills.add(jobOfferSkill12);
+        jobOfferSkills.add(jobOfferSkill3);
         when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
         JobOffer jobOffer = new JobOffer();
+        jobOffer.setJobOfferSkills(jobOfferSkills);
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
@@ -59,7 +81,7 @@ class MatchServiceImplTest {
 
         assertEquals(1, match.getApplicant().getId());
         assertEquals(1, match.getJobOffer().getId());
-
+        assertEquals("33%",match.getMatchPercentage());
 
     }
 
@@ -74,8 +96,30 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        ApplicantSkill applicantSkill = new ApplicantSkill();
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill3 = new JobOfferSkill();
+        Skill skill1 = new Skill();
+        skill1.setId(1);
+        Skill skill2 = new Skill();
+        skill2.setId(2);
+        Skill skill3 = new Skill();
+        skill3.setId(3);
+        applicantSkill.setSkill(skill1);
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
+        applicantSkills.add(applicantSkill);
+        applicant.setApplicantSkills(applicantSkills);
+        jobOfferSkill.setSkill(skill1);
+        jobOfferSkill12.setSkill(skill2);
+        jobOfferSkill3.setSkill(skill3);
+        List<JobOfferSkill> jobOfferSkills = new ArrayList<>();
+        jobOfferSkills.add(jobOfferSkill);
+        jobOfferSkills.add(jobOfferSkill12);
+        jobOfferSkills.add(jobOfferSkill3);
         when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
         JobOffer jobOffer = new JobOffer();
+        jobOffer.setJobOfferSkills(jobOfferSkills);
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
@@ -101,8 +145,30 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        ApplicantSkill applicantSkill = new ApplicantSkill();
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill3 = new JobOfferSkill();
+        Skill skill1 = new Skill();
+        skill1.setId(1);
+        Skill skill2 = new Skill();
+        skill2.setId(2);
+        Skill skill3 = new Skill();
+        skill3.setId(3);
+        applicantSkill.setSkill(skill1);
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
+        applicantSkills.add(applicantSkill);
+        applicant.setApplicantSkills(applicantSkills);
+        jobOfferSkill.setSkill(skill1);
+        jobOfferSkill12.setSkill(skill2);
+        jobOfferSkill3.setSkill(skill3);
+        List<JobOfferSkill> jobOfferSkills = new ArrayList<>();
+        jobOfferSkills.add(jobOfferSkill);
+        jobOfferSkills.add(jobOfferSkill12);
+        jobOfferSkills.add(jobOfferSkill3);
         when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
         JobOffer jobOffer = new JobOffer();
+        jobOffer.setJobOfferSkills(jobOfferSkills);
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
@@ -128,13 +194,35 @@ class MatchServiceImplTest {
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
         applicant.setInactive(false);
+        ApplicantSkill applicantSkill = new ApplicantSkill();
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill3 = new JobOfferSkill();
+        Skill skill1 = new Skill();
+        skill1.setId(1);
+        Skill skill2 = new Skill();
+        skill2.setId(2);
+        Skill skill3 = new Skill();
+        skill3.setId(3);
+        applicantSkill.setSkill(skill1);
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
+        applicantSkills.add(applicantSkill);
+        applicant.setApplicantSkills(applicantSkills);
+        jobOfferSkill.setSkill(skill1);
+        jobOfferSkill12.setSkill(skill2);
+        jobOfferSkill3.setSkill(skill3);
+        List<JobOfferSkill> jobOfferSkills = new ArrayList<>();
+        jobOfferSkills.add(jobOfferSkill);
+        jobOfferSkills.add(jobOfferSkill12);
+        jobOfferSkills.add(jobOfferSkill3);
         when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
         JobOffer jobOffer = new JobOffer();
+        jobOffer.setJobOfferSkills(jobOfferSkills);
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
         jobOffer.setTitle("Junior Java Developer");
-        jobOffer.setInactive(true);
+        jobOffer.setInactive(false);
         jobOffer.setOfferDate(LocalDate.now());
         when(jobOfferRepo.findById(jobOffer.getId())).thenReturn(Optional.of(jobOffer));
 
@@ -155,9 +243,31 @@ class MatchServiceImplTest {
         applicant.setRegion("Athina");
         applicant.setEmail("abcdefg@gmail.gr");
         applicant.setDob(new Date());
-        applicant.setInactive(true);
+        applicant.setInactive(false);
+        ApplicantSkill applicantSkill = new ApplicantSkill();
+        JobOfferSkill jobOfferSkill = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill12 = new JobOfferSkill();
+        JobOfferSkill jobOfferSkill3 = new JobOfferSkill();
+        Skill skill1 = new Skill();
+        skill1.setId(1);
+        Skill skill2 = new Skill();
+        skill2.setId(2);
+        Skill skill3 = new Skill();
+        skill3.setId(3);
+        applicantSkill.setSkill(skill1);
+        List<ApplicantSkill> applicantSkills = new ArrayList<>();
+        applicantSkills.add(applicantSkill);
+        applicant.setApplicantSkills(applicantSkills);
+        jobOfferSkill.setSkill(skill1);
+        jobOfferSkill12.setSkill(skill2);
+        jobOfferSkill3.setSkill(skill3);
+        List<JobOfferSkill> jobOfferSkills = new ArrayList<>();
+        jobOfferSkills.add(jobOfferSkill);
+        jobOfferSkills.add(jobOfferSkill12);
+        jobOfferSkills.add(jobOfferSkill3);
         when(applicantRepo.findById(applicant.getId())).thenReturn(Optional.of(applicant));
         JobOffer jobOffer = new JobOffer();
+        jobOffer.setJobOfferSkills(jobOfferSkills);
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
         jobOffer.setRegion("Athens");
@@ -174,7 +284,7 @@ class MatchServiceImplTest {
 
 
     @Test
-    void addPartiallyMatch() throws JobOfferNotFoundException, JobOfferAlreadyClosed {
+    void addPartiallyMatch() throws JobOfferNotFoundException, JobOfferAlreadyClosed, InterruptedException {
 
         Applicant applicant1 = new Applicant();
         applicant1.setId(1);
@@ -220,6 +330,9 @@ class MatchServiceImplTest {
 
         //applicant 2 has skill1 and skill3
 
+        applicant1.setMatches(new ArrayList<Match>());
+        applicant2.setMatches(new ArrayList<Match>());
+
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
@@ -245,6 +358,8 @@ class MatchServiceImplTest {
 
 
         List<Match> autoMatch = matchServiceImpl.addPartiallyMatch(1);
+        System.out.println("first applicant matched " +autoMatch.get(0).getMatchPercentage() + "2nd appl matched" + autoMatch.get(1).getMatchPercentage());
+        Thread.sleep(20000);
         assertEquals(2, autoMatch.size());
 
     }
@@ -295,6 +410,9 @@ class MatchServiceImplTest {
         applicant2.setApplicantSkills(applicantSkills2);
 
         //applicant 2 has skill1 and skill3
+
+        applicant1.setMatches(new ArrayList<Match>());
+        applicant2.setMatches(new ArrayList<Match>());
 
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
@@ -374,6 +492,9 @@ class MatchServiceImplTest {
         applicant2.setApplicantSkills(applicantSkills2);
 
         //applicant 2 has skill1 and skill3
+
+        applicant1.setMatches(new ArrayList<Match>());
+        applicant2.setMatches(new ArrayList<Match>());
 
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
@@ -457,6 +578,9 @@ class MatchServiceImplTest {
 
         //applicant 2 has skill1, skill2 and skill3
 
+        applicant1.setMatches(new ArrayList<Match>());
+
+        applicant2.setMatches(new ArrayList<Match>());
 
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
@@ -535,6 +659,8 @@ class MatchServiceImplTest {
 
         //applicant 2 has skill1, skill2 and skill3
 
+        applicant1.setMatches(new ArrayList<Match>());
+        applicant2.setMatches(new ArrayList<Match>());
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
         jobOffer.setCompany("Accenture");
@@ -611,6 +737,9 @@ class MatchServiceImplTest {
         applicant2.setApplicantSkills(applicantSkills2);
 
         //applicant 2 has skill1, skill2 and skill3
+
+        applicant1.setMatches(new ArrayList<Match>());
+        applicant2.setMatches(new ArrayList<Match>());
 
         JobOffer jobOffer = new JobOffer();
         jobOffer.setId(1);
