@@ -51,11 +51,11 @@ public class JobOfferController {
             @RequestParam(required = false) String offerDate,
             @RequestParam(required = false) String region,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long Skill)
+            @RequestParam(required = false) Long skill)
             throws JobOfferNotFoundException, ParseException {
         log.info("\nGET REQUEST: Calling getJobOfferByCriteria method ");
         return jobOfferService.getSelectedJobOffers(offerDate, region,
-                name, Skill);
+                name, skill);
     }
 
     @DeleteMapping("jobOffer/{id}")
